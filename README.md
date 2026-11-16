@@ -71,9 +71,21 @@ Open directly in any desktop or mobile browser with zero installation:
 - **Live URL:** [https://sdmmobailrepairshop.netlify.app/](https://sdmmobailrepairshop.netlify.app/)
 
 ### 2. Offline / Local Shop PC via `.bat` Launcher (`web-app/start-pos.bat`)
-Run the POS locally on your Windows shop laptop/PC at `http://localhost:3000`:
-1. Clone or download this repository (or the `web-app/` folder) to your PC.
-2. Open the `web-app/` folder and double-click **`start-pos.bat`** (on macOS/Linux, run `start-pos.command`).
+
+#### Download Web App Files to Your PC
+Choose any of these options to download the Web App POS onto a Windows, macOS, or Linux PC:
+- **Option A — Direct Web App ZIP (Fastest, Web App Only):** [Download Web App POS ZIP](https://github.com/sdm0023/mobile-shop-repair-manager/raw/main/public/assets/aistudio/mobile-repair-shop-pos__6__6b2b1b4d.zip) -> Extract the ZIP folder -> Run `start-pos.bat` directly.
+- **Option B — Full Repository ZIP (No Git Required):** [Download Full Repo ZIP](https://github.com/sdm0023/mobile-shop-repair-manager/archive/refs/heads/main.zip) -> Extract the ZIP -> Open the `web-app/` folder.
+- **Option C — Git Sparse Checkout (Download only `web-app/` via Terminal/PowerShell):**
+  ```bash
+  git clone --filter=blob:none --sparse https://github.com/sdm0023/mobile-shop-repair-manager.git
+  cd mobile-shop-repair-manager
+  git sparse-checkout set web-app
+  ```
+
+#### Run Locally on Shop PC (`http://localhost:3000`)
+1. Open the extracted `web-app/` folder on your PC.
+2. Double-click **`start-pos.bat`** on Windows (or run `./start-pos.command` on macOS/Linux).
 3. On the first run, `start-pos.bat` automatically checks for **Node.js LTS** (installing it via `winget` or the official `.msi` if missing), runs `npm install --legacy-peer-deps`, builds the production bundle (`npm run build`), starts `npm run preview` on `http://localhost:3000`, and opens your browser.
 4. On subsequent runs, it launches immediately. Keep the terminal window open/minimized while using the POS.
 5. *(Optional Google Sheets Sync)* Add `http://localhost:3000` (and `https://sdmmobailrepairshop.netlify.app`) to **Authorized JavaScript origins** in your Google Cloud OAuth 2.0 Web Client ID, then connect from **Settings** inside the web app. See [`web-app/LOCAL_SETUP.md`](web-app/LOCAL_SETUP.md) for full details.
