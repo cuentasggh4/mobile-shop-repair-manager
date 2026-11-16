@@ -1,0 +1,6 @@
+{
+  "name": "Mobile Repair Shop",
+  "description": "Complete offline-first mobile repair shop manager with job cards, 12-point intake checklist, repair pipeline, invoicing, WhatsApp updates, and spare parts inventory.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
