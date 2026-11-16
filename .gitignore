@@ -16,3 +16,7 @@
 local.properties
 .env
 debug.keystore
+web-app/node_modules/
+web-app/dist/
+web-app/.env*
+!web-app/.env.example

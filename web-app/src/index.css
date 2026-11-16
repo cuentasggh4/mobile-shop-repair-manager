@@ -1,0 +1,127 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  :root {
+    color-scheme: light;
+    --bg-canvas: #F1F5F9;
+    --text-primary: #0F172A;
+    --bg-surface: #FFFFFF;
+    --bg-surface-elevated: #F8FAFC;
+    --border-hairline: rgba(15, 23, 42, 0.12);
+    --accent-primary: #2563EB;
+  }
+
+  html.dark {
+    color-scheme: dark;
+    --bg-canvas: #0F172A;
+    --text-primary: #F1F5F9;
+    --bg-surface: #1E293B;
+    --bg-surface-elevated: #263348;
+    --border-hairline: rgba(148, 163, 184, 0.14);
+    --accent-primary: #2563EB;
+  }
+
+  html,
+  body {
+    background-color: var(--bg-canvas);
+    color: var(--text-primary);
+    font-family: "DM Sans", system-ui, -apple-system, sans-serif;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  .font-display {
+    font-family: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  }
+
+  .font-mono-tabular {
+    font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media print {
+  html,
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    height: auto !important;
+    overflow: visible !important;
+    color-scheme: light !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .print-overlay-shell {
+    position: static !important;
+    inset: auto !important;
+    display: block !important;
+    background: #ffffff !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  .print-modal-card {
+    position: static !important;
+    max-width: none !important;
+    max-height: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: #ffffff !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: visible !important;
+  }
+
+  .print-scroll-area {
+    overflow: visible !important;
+    max-height: none !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+  }
+
+  #printable-receipt-root {
+    background: #ffffff !important;
+    color: #000000 !important;
+    box-shadow: none !important;
+    border: none !important;
+    margin: 0 auto !important;
+    width: 100% !important;
+  }
+
+  #printable-receipt-root.thermal-mode {
+    width: 80mm !important;
+    max-width: 80mm !important;
+    padding: 4mm !important;
+  }
+
+  #printable-receipt-root.a4-mode {
+    width: 100% !important;
+    max-width: 210mm !important;
+    padding: 8mm !important;
+  }
+}

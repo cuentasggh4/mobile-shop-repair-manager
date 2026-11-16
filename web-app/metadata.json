@@ -1,0 +1,8 @@
+{
+  "name": "Mobile Repair Shop POS",
+  "description": "Desktop and laptop POS web app with 2-way Google Sheets sync compatible with the Mobile Repair Shop Android schema.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
