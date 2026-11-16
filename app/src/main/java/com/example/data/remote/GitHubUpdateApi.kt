@@ -5,6 +5,25 @@ import com.squareup.moshi.JsonClass
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Path
+import retrofit2.http.Url
+
+@JsonClass(generateAdapter = true)
+data class RemoteVersionManifest(
+    @Json(name = "versionCode")
+    val versionCode: Int = 0,
+    @Json(name = "versionName")
+    val versionName: String = "",
+    @Json(name = "releaseTitle")
+    val releaseTitle: String? = null,
+    @Json(name = "releaseNotes")
+    val releaseNotes: String? = null,
+    @Json(name = "apkDownloadUrl")
+    val apkDownloadUrl: String? = null,
+    @Json(name = "releasePageUrl")
+    val releasePageUrl: String? = null,
+    @Json(name = "publishedAt")
+    val publishedAt: String? = null
+)
 
 @JsonClass(generateAdapter = true)
 data class GitHubReleaseAsset(
@@ -37,4 +56,11 @@ interface GitHubUpdateApi {
         @Header("Accept") accept: String = "application/vnd.github+json",
         @Header("User-Agent") userAgent: String = "MobileRepairShop-Android"
     ): GitHubReleaseResponse
+
+    @GET
+    suspend fun getRemoteVersionManifest(
+        @Url url: String,
+        @Header("Cache-Control") cacheControl: String = "no-cache",
+        @Header("User-Agent") userAgent: String = "MobileRepairShop-Android"
+    ): RemoteVersionManifest
 }

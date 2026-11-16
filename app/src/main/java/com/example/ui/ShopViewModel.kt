@@ -99,11 +99,27 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), true)
 
     val githubRepoSlug: StateFlow<String> = appPreferences.githubRepoSlug
-        .catch { emit("") }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "")
+        .catch { emit(AppPreferences.DEFAULT_GITHUB_REPO_SLUG) }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            AppPreferences.DEFAULT_GITHUB_REPO_SLUG
+        )
 
     private val _updateCheckState = MutableStateFlow<UpdateCheckUiState>(UpdateCheckUiState.Idle)
     val updateCheckState: StateFlow<UpdateCheckUiState> = _updateCheckState.asStateFlow()
+
+    private val _isUpdateBannerDismissed = MutableStateFlow(false)
+    val showUpdateBanner: StateFlow<Boolean> = combine(
+        _updateCheckState,
+        _isUpdateBannerDismissed
+    ) { state, dismissed ->
+        state is UpdateCheckUiState.UpdateAvailable && !dismissed
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
+
+    private val _showStartupUpdateDialog = MutableStateFlow(false)
+    val showStartupUpdateDialog: StateFlow<Boolean> = _showStartupUpdateDialog.asStateFlow()
+    private var hasHandledStartupUpdatePrompt = false
     
     // UI Transient Error State
     private val _errorMessage = MutableStateFlow<String?>(null)
@@ -192,10 +208,12 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         }
         val result = repository.checkAppUpdate(
             repoSlug = repoSlug,
+            currentVersionCode = BuildConfig.VERSION_CODE,
             currentVersionName = BuildConfig.VERSION_NAME
         )
         when (result) {
             is AppUpdateResult.UpdateAvailable -> {
+                _isUpdateBannerDismissed.value = false
                 _updateCheckState.value = UpdateCheckUiState.UpdateAvailable(
                     currentVersion = result.currentVersion,
                     latestVersion = result.latestVersion,
@@ -204,6 +222,10 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                     releasePageUrl = result.releasePageUrl,
                     apkDownloadUrl = result.apkDownloadUrl
                 )
+                if (!manual && !hasHandledStartupUpdatePrompt) {
+                    hasHandledStartupUpdatePrompt = true
+                    _showStartupUpdateDialog.value = true
+                }
                 if (!manual && notificationsEnabled.value) {
                     NotificationHelper.notifyAppUpdateAvailable(
                         context = getApplication(),
@@ -235,6 +257,14 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                 }
             }
         }
+    }
+
+    fun dismissStartupUpdateDialog() {
+        _showStartupUpdateDialog.value = false
+    }
+
+    fun dismissUpdateBanner() {
+        _isUpdateBannerDismissed.value = true
     }
 
     fun openUpdateReleasePage(context: Context, url: String) {

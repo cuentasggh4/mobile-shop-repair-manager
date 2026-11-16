@@ -11,13 +11,32 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.SystemUpdate
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -27,6 +46,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.data.preferences.AppThemeMode
 import com.example.ui.AppScreen
 import com.example.ui.ShopViewModel
+import com.example.ui.UpdateCheckUiState
 import com.example.ui.components.WhatsAppPreviewDialog
 import com.example.ui.screens.DashboardScreen
 import com.example.ui.screens.JobDetailScreen
@@ -53,6 +73,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             val viewModel: ShopViewModel = viewModel()
             val themeMode by viewModel.themeMode.collectAsStateWithLifecycle()
+            val showStartupUpdateDialog by viewModel.showStartupUpdateDialog.collectAsStateWithLifecycle()
+            val updateCheckState by viewModel.updateCheckState.collectAsStateWithLifecycle()
             val isDarkTheme = when (themeMode) {
                 AppThemeMode.SYSTEM -> isSystemInDarkTheme()
                 AppThemeMode.LIGHT -> false
@@ -115,6 +137,21 @@ class MainActivity : ComponentActivity() {
                 if (viewModel.showWhatsAppPreviewDialog) {
                     WhatsAppPreviewDialog(viewModel = viewModel)
                 }
+
+                val availableUpdate = updateCheckState as? UpdateCheckUiState.UpdateAvailable
+                if (showStartupUpdateDialog && availableUpdate != null) {
+                    AppUpdatePromptDialog(
+                        update = availableUpdate,
+                        onUpdateNow = {
+                            val targetUrl = availableUpdate.apkDownloadUrl ?: availableUpdate.releasePageUrl
+                            viewModel.dismissStartupUpdateDialog()
+                            viewModel.openUpdateReleasePage(context, targetUrl)
+                        },
+                        onLater = {
+                            viewModel.dismissStartupUpdateDialog()
+                        }
+                    )
+                }
             }
         }
     }
@@ -127,4 +164,73 @@ class MainActivity : ComponentActivity() {
             pendingNotificationJobId = jobId
         }
     }
+}
+
+@Composable
+private fun AppUpdatePromptDialog(
+    update: UpdateCheckUiState.UpdateAvailable,
+    onUpdateNow: () -> Unit,
+    onLater: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onLater,
+        modifier = Modifier.testTag("dialog_startup_update"),
+        icon = {
+            Icon(
+                imageVector = Icons.Default.SystemUpdate,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary
+            )
+        },
+        title = {
+            Text(
+                text = stringResource(R.string.dialog_update_available_title),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
+        },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(
+                    text = stringResource(
+                        R.string.dialog_update_available_body,
+                        update.latestVersion,
+                        update.currentVersion
+                    ),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                if (update.releaseNotes.isNotBlank()) {
+                    Spacer(modifier = Modifier.height(2.dp))
+                    Text(
+                        text = update.releaseNotes,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        maxLines = 4,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = onUpdateNow,
+                modifier = Modifier
+                    .defaultMinSize(minHeight = 48.dp)
+                    .testTag("btn_update_now")
+            ) {
+                Text(text = stringResource(R.string.btn_update_now))
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = onLater,
+                modifier = Modifier
+                    .defaultMinSize(minHeight = 48.dp)
+                    .testTag("btn_update_later")
+            ) {
+                Text(text = stringResource(R.string.btn_update_later))
+            }
+        }
+    )
 }

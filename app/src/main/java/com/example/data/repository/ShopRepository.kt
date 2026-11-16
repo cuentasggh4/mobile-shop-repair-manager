@@ -30,6 +30,7 @@ import com.example.data.remote.AuthTokenOutcome
 import com.example.data.remote.GoogleSheetsSyncManager
 import com.example.data.remote.GoogleSyncConfig
 import com.example.data.remote.SyncSummary
+import com.example.data.remote.VersionCheckService
 import com.example.util.ReceiptPdfGenerator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -948,8 +949,16 @@ class ShopRepository(
         shopProfileDao.insertProfile(defaultProfile)
     }
 
-    // --- GitHub Release Version Check ---
-    suspend fun checkAppUpdate(repoSlug: String, currentVersionName: String): AppUpdateResult {
-        return AppUpdateChecker.checkLatestRelease(repoSlug, currentVersionName)
+    // --- GitHub version.json & Release Version Check ---
+    suspend fun checkAppUpdate(
+        repoSlug: String,
+        currentVersionCode: Int,
+        currentVersionName: String
+    ): AppUpdateResult {
+        return VersionCheckService.checkLatestVersion(
+            repoSlug = repoSlug,
+            currentVersionCode = currentVersionCode,
+            currentVersionName = currentVersionName
+        )
     }
 }

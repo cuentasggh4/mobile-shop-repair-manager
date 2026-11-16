@@ -1,5 +1,6 @@
 package com.example.ui.screens
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -27,9 +28,11 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.CloudDone
 import androidx.compose.material.icons.filled.CloudOff
 import androidx.compose.material.icons.filled.DoneAll
+import androidx.compose.material.icons.filled.NewReleases
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Warning
@@ -68,7 +71,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.R
@@ -76,6 +81,7 @@ import com.example.data.entity.JobCardEntity
 import com.example.data.model.RepairStage
 import com.example.ui.AppScreen
 import com.example.ui.ShopViewModel
+import com.example.ui.UpdateCheckUiState
 import com.example.ui.components.AppCard
 import com.example.ui.components.RepairStatusBadge
 import com.example.ui.theme.ShopTheme
@@ -101,6 +107,8 @@ fun DashboardScreen(
     val errorMessage by viewModel.errorMessage.collectAsStateWithLifecycle()
     val syncConfig by viewModel.googleSyncConfig.collectAsStateWithLifecycle()
     val isSyncing by viewModel.isSyncing.collectAsStateWithLifecycle()
+    val showUpdateBanner by viewModel.showUpdateBanner.collectAsStateWithLifecycle()
+    val updateCheckState by viewModel.updateCheckState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     val shopColors = ShopTheme.colors
 
@@ -310,6 +318,21 @@ fun DashboardScreen(
                     .widthIn(max = 720.dp), // Adaptive tablet & counter layout spec
                 contentPadding = PaddingValues(bottom = 88.dp)
             ) {
+                val availableUpdate = updateCheckState as? UpdateCheckUiState.UpdateAvailable
+                if (showUpdateBanner && availableUpdate != null) {
+                    item(key = "update_available_banner") {
+                        UpdateAvailableBanner(
+                            update = availableUpdate,
+                            onUpdateNow = {
+                                val targetUrl = availableUpdate.apkDownloadUrl ?: availableUpdate.releasePageUrl
+                                viewModel.openUpdateReleasePage(context, targetUrl)
+                            },
+                            onDismiss = { viewModel.dismissUpdateBanner() },
+                            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 14.dp)
+                        )
+                    }
+                }
+
                 // Quick KPI Cards (Starts immediately at top)
                 item {
                     Row(
@@ -662,6 +685,86 @@ private fun M3JobItemCard(
                     color = if (isPaid) itemColors.repaired else itemColors.pending,
                     style = MaterialTheme.typography.titleSmall,
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun UpdateAvailableBanner(
+    update: UpdateCheckUiState.UpdateAvailable,
+    onUpdateNow: () -> Unit,
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val shopColors = ShopTheme.colors
+    Surface(
+        shape = RoundedCornerShape(14.dp),
+        color = shopColors.pendingContainer,
+        border = BorderStroke(1.dp, shopColors.pending.copy(alpha = 0.35f)),
+        modifier = modifier
+            .fillMaxWidth()
+            .testTag("banner_update_available")
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp, vertical = 10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Default.NewReleases,
+                contentDescription = null,
+                tint = shopColors.pending,
+                modifier = Modifier.size(22.dp)
+            )
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = stringResource(R.string.banner_update_available_title),
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = shopColors.pending,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Text(
+                    text = stringResource(
+                        R.string.banner_update_available_subtitle,
+                        update.latestVersion,
+                        update.currentVersion
+                    ),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+            Button(
+                onClick = onUpdateNow,
+                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
+                modifier = Modifier
+                    .defaultMinSize(minHeight = 48.dp)
+                    .testTag("banner_btn_update_now")
+            ) {
+                Text(
+                    text = stringResource(R.string.btn_update_now),
+                    style = MaterialTheme.typography.bodySmall,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+            IconButton(
+                onClick = onDismiss,
+                modifier = Modifier
+                    .defaultMinSize(minHeight = 48.dp, minWidth = 48.dp)
+                    .testTag("banner_btn_dismiss_update")
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Close,
+                    contentDescription = stringResource(R.string.cd_dismiss_update_banner),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.size(18.dp)
                 )
             }
         }

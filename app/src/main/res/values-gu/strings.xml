@@ -293,4 +293,11 @@
     <string name="update_status_error">અપડેટ તપાસ નિષ્ફળ: %1$s</string>
     <string name="notif_update_available_title">નવું એપ અપડેટ ઉપલબ્ધ: v%1$s</string>
     <string name="notif_update_available_body">GitHub પર નવીનતમ રિલીઝ જોવા અથવા ડાઉનલોડ કરવા માટે ટેપ કરો.</string>
+    <string name="dialog_update_available_title">નવું એપ અપડેટ ઉપલબ્ધ છે</string>
+    <string name="dialog_update_available_body">GitHub પર નવું વર્ઝન v%1$s ઉપલબ્ધ છે (હાલનું: v%2$s). હમણાં અપડેટ કરો અથવા પછીથી સેટિંગ્સમાંથી અપડેટ કરો.</string>
+    <string name="btn_update_now">હમણાં અપડેટ કરો</string>
+    <string name="btn_update_later">પછીથી</string>
+    <string name="banner_update_available_title">નવું અપડેટ ઉપલબ્ધ છે</string>
+    <string name="banner_update_available_subtitle">નવું વર્ઝન v%1$s તૈયાર છે (હાલનું: v%2$s)</string>
+    <string name="cd_dismiss_update_banner">અપડેટ બેનર બંધ કરો</string>
 </resources>

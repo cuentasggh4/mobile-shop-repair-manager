@@ -293,4 +293,11 @@
     <string name="update_status_error">अपडेट जांच विफल: %1$s</string>
     <string name="notif_update_available_title">नया ऐप अपडेट उपलब्ध: v%1$s</string>
     <string name="notif_update_available_body">GitHub पर नवीनतम रिलीज़ देखने या डाउनलोड करने के लिए टैप करें।</string>
+    <string name="dialog_update_available_title">नया ऐप अपडेट उपलब्ध है</string>
+    <string name="dialog_update_available_body">GitHub पर नया वर्ज़न v%1$s उपलब्ध है (वर्तमान: v%2$s)। अभी अपडेट करें या बाद में सेटिंग्स से अपडेट करें।</string>
+    <string name="btn_update_now">अभी अपडेट करें</string>
+    <string name="btn_update_later">बाद में</string>
+    <string name="banner_update_available_title">नया अपडेट उपलब्ध है</string>
+    <string name="banner_update_available_subtitle">नया वर्ज़न v%1$s तैयार है (वर्तमान: v%2$s)</string>
+    <string name="cd_dismiss_update_banner">अपडेट बैनर बंद करें</string>
 </resources>

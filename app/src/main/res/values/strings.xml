@@ -293,4 +293,11 @@
     <string name="update_status_error">Update check failed: %1$s</string>
     <string name="notif_update_available_title">App Update Available: v%1$s</string>
     <string name="notif_update_available_body">Tap to view or download the latest release on GitHub.</string>
+    <string name="dialog_update_available_title">New App Update Available</string>
+    <string name="dialog_update_available_body">Version v%1$s is now available on GitHub (current: v%2$s). Update now or update later from Settings.</string>
+    <string name="btn_update_now">Update Now</string>
+    <string name="btn_update_later">Later</string>
+    <string name="banner_update_available_title">Update Available</string>
+    <string name="banner_update_available_subtitle">New version v%1$s is ready (current: v%2$s)</string>
+    <string name="cd_dismiss_update_banner">Dismiss update banner</string>
 </resources>
