@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat
 import com.example.MainActivity
 import com.example.R
 import com.example.data.model.RepairStage
+import com.example.data.remote.AppUpdateChecker
 
 object NotificationHelper {
 
@@ -163,9 +164,10 @@ object NotificationHelper {
         releaseUrl: String
     ) {
         if (!hasNotificationPermission(context)) return
+        if (!AppUpdateChecker.isTrustedUpdateUrl(releaseUrl)) return
         ensureChannels(context)
 
-        val viewIntent = Intent(Intent.ACTION_VIEW, Uri.parse(releaseUrl)).apply {
+        val viewIntent = Intent(Intent.ACTION_VIEW, Uri.parse(releaseUrl.trim())).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
         }
         val pendingIntent = PendingIntent.getActivity(

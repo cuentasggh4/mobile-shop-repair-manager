@@ -268,9 +268,12 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun openUpdateReleasePage(context: Context, url: String) {
-        if (url.isBlank()) return
+        if (!AppUpdateChecker.isTrustedUpdateUrl(url)) {
+            Toast.makeText(context, "Blocked untrusted update link", Toast.LENGTH_SHORT).show()
+            return
+        }
         try {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url.trim())).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK
             }
             context.startActivity(intent)

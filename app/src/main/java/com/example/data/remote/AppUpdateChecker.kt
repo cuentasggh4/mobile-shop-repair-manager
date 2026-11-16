@@ -8,6 +8,7 @@ import okhttp3.OkHttpClient
 import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import java.net.URI
 import java.util.concurrent.TimeUnit
 
 sealed interface AppUpdateResult {
@@ -76,6 +77,26 @@ object AppUpdateChecker {
     fun normalizeRepoSlug(rawInput: String): String {
         val parsed = parseRepoSlug(rawInput) ?: return rawInput.trim()
         return "${parsed.first}/${parsed.second}"
+    }
+
+    fun isTrustedUpdateUrl(url: String?): Boolean {
+        val trimmed = url?.trim() ?: return false
+        if (trimmed.isEmpty()) return false
+        return try {
+            val uri = URI(trimmed)
+            val scheme = uri.scheme?.lowercase() ?: return false
+            val host = uri.host?.lowercase() ?: return false
+            scheme == "https" && (
+                host == "github.com" ||
+                    host == "www.github.com" ||
+                    host == "raw.githubusercontent.com" ||
+                    host == "objects.githubusercontent.com" ||
+                    host == "release-assets.githubusercontent.com" ||
+                    host.endsWith(".githubusercontent.com")
+                )
+        } catch (_: Exception) {
+            false
+        }
     }
 
     fun cleanVersionName(rawVersion: String): String {

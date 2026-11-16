@@ -12,6 +12,7 @@ import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.example.BuildConfig
 import com.example.data.dao.JobCardDao
 import com.example.data.dao.ShopProfileDao
 import com.example.data.entity.JobCardEntity
@@ -131,7 +132,11 @@ class GoogleSheetsSyncManager(
 
     private val api: GoogleSheetsApi by lazy {
         val logging = HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BASIC
+            level = if (BuildConfig.DEBUG) {
+                HttpLoggingInterceptor.Level.BASIC
+            } else {
+                HttpLoggingInterceptor.Level.NONE
+            }
         }
         val client = OkHttpClient.Builder()
             .connectTimeout(20, TimeUnit.SECONDS)

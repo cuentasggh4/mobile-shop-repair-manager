@@ -44,7 +44,7 @@ An offline-first **Mobile Repair Shop Manager** built with **Kotlin** and **Jetp
 │   │   ├── model/        # Domain models (RepairStage, IntakeChecklist, CustomerKhataSummary)
 │   │   ├── preferences/  # DataStore AppPreferences (Theme, Notifications, GitHub Repo)
 │   │   ├── remote/       # GoogleSheetsApi, GoogleSheetsSyncManager, NightlyBackupWorker,
-│   │   │                 # GitHubUpdateApi, AppUpdateChecker
+│   │   │                 # GitHubUpdateApi, AppUpdateChecker, VersionCheckService
 │   │   └── repository/   # Unified ShopRepository
 │   ├── ui/
 │   │   ├── ShopViewModel.kt
@@ -52,13 +52,35 @@ An offline-first **Mobile Repair Shop Manager** built with **Kotlin** and **Jetp
 │   │   ├── screens/      # Dashboard, NewJob, JobDetail, KhataBook, ReceiptPreview, Settings, Sync
 │   │   └── theme/        # Material 3 Dark/Light ColorScheme & ShopSemanticColors
 │   └── util/             # NotificationHelper & ReceiptPdfGenerator
-└── web-app/                         # Web App POS (React + Vite + TypeScript)
-    ├── start-pos.bat                # One-click Windows local server launcher (http://localhost:3000)
-    ├── start-pos.command            # macOS / Linux local server launcher
-    ├── LOCAL_SETUP.md               # Detailed local POS & Google Sheets setup guide
-    ├── package.json
-    └── src/
+├── web-app/                         # Web App POS (React + Vite + TypeScript)
+│   ├── start-pos.bat                # One-click Windows local server launcher (http://localhost:3000)
+│   ├── start-pos.command            # macOS / Linux local server launcher
+│   ├── LOCAL_SETUP.md               # Detailed local POS & Google Sheets setup guide
+│   ├── package.json
+│   └── src/
+├── .github/workflows/android-apk.yml # Signed Release APK GitHub Actions workflow
+└── version.json                     # Remote versionCode manifest for in-app update checks
 ```
+
+---
+
+## Download & Install Android APK
+
+### APK Download Links
+- **Latest Release APK (Recommended):** [Download Latest APK from GitHub Releases](https://github.com/sdm0023/mobile-shop-repair-manager/releases/latest)
+- **All Releases & Changelogs:** [View All Releases](https://github.com/sdm0023/mobile-shop-repair-manager/releases)
+- **Prebuilt Debug APK (Repo Snapshot):** [`app-debug.apk`](https://github.com/sdm0023/mobile-shop-repair-manager/raw/main/.build-outputs/app-debug.apk) *(useful for quick testing before publishing the first Release)*
+
+### How to Install on Your Android Phone
+1. On your Android phone, open **[Latest GitHub Release](https://github.com/sdm0023/mobile-shop-repair-manager/releases/latest)** in Chrome or any browser.
+2. Under **Assets**, tap the `.apk` file (for example, `MobileRepairShop-v1.0.apk`) to download it.
+3. Open the downloaded `.apk` file from your browser downloads or **Files** app.
+4. If Android asks *"For your security, your phone isn't allowed to install unknown apps from this source"*:
+   - Tap **Settings** -> turn ON **Allow from this source** -> press Back -> tap **Install**.
+5. Launch **Mobile Repair Shop** and allow notifications when prompted.
+6. **Automatic Updates:** Whenever internet is active on app launch, `VersionCheckService` checks [`version.json`](version.json) on GitHub against `BuildConfig.VERSION_CODE`. If a newer version is available, an **Update Available** banner and prompt appear with **Update Now** and **Later** options.
+
+> **Important Upgrade Note:** Updating over an existing installation preserves all local Room job cards & Khata records only when the new APK uses the same package name (`com.aistudio.mobilerepair.kzptqr`) and same signing keystore (`SHA-1`). Never switch between debug and release signatures on a live shop phone without backing up to Google Drive/Sheets first.
 
 ---
 
@@ -103,10 +125,10 @@ gradle :app:testDebugUnitTest
 ```
 
 ### Publishing New Releases for the In-App Update Checker
-1. Bump `versionCode` and `versionName` in `app/build.gradle.kts` (for example, `versionCode = 2`, `versionName = "1.1"`).
-2. Build a signed release APK (with your local/CI upload keystore—never commit `.jks` or `.keystore` files to a public repository).
-3. Create a GitHub Release with a matching version tag (e.g., `v1.1`) and attach the `.apk` file.
-4. In the app, open **Settings -> App Updates (GitHub)**, enter `sdm0023/mobile-shop-repair-manager`, and tap **Check for Updates**.
+1. Bump `versionCode` and `versionName` in `app/build.gradle.kts` (for example, `versionCode = 2`, `versionName = "1.1"`) and update [`version.json`](version.json) to match.
+2. Add your permanent signing secrets (`RELEASE_KEYSTORE_BASE64`, `STORE_PASSWORD`, `KEY_PASSWORD`) under GitHub Repo **Settings -> Secrets and variables -> Actions** (never commit `.jks` or `.keystore` files).
+3. Push a matching version tag (e.g., `git tag v1.1 && git push origin v1.1`) or run **Actions -> Build & Release Android APK** manually — the workflow builds a consistently signed APK and attaches it to GitHub Releases automatically.
+4. On user phones, the app automatically checks [`version.json`](version.json) on startup (or manually via **Settings -> App Updates (GitHub)** for `sdm0023/mobile-shop-repair-manager`) and displays the **Update Available** banner/prompt.
 
 ---
 
