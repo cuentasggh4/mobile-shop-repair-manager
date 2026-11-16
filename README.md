@@ -66,21 +66,23 @@ An offline-first **Mobile Repair Shop Manager** built with **Kotlin** and **Jetp
 
 ## Download & Install Android APK
 
+> **No manual APK upload needed:** Whenever code is pushed to `main` (or a `v*` tag is created), [GitHub Actions](https://github.com/sdm0023/mobile-shop-repair-manager/actions) automatically builds the Android `.apk` and publishes it under **Releases -> Latest** within ~2–3 minutes.
+
 ### APK Download Links
-- **Latest Release APK (Recommended):** [Download Latest APK from GitHub Releases](https://github.com/sdm0023/mobile-shop-repair-manager/releases/latest)
+- **Latest APK Download:** [Download Latest APK from GitHub Releases](https://github.com/sdm0023/mobile-shop-repair-manager/releases/latest)
 - **All Releases & Changelogs:** [View All Releases](https://github.com/sdm0023/mobile-shop-repair-manager/releases)
-- **Prebuilt Debug APK (Repo Snapshot):** [`app-debug.apk`](https://github.com/sdm0023/mobile-shop-repair-manager/raw/main/.build-outputs/app-debug.apk) *(useful for quick testing before publishing the first Release)*
+- **Build Status (if Latest Release is still building):** [Check GitHub Actions APK Builder](https://github.com/sdm0023/mobile-shop-repair-manager/actions)
 
 ### How to Install on Your Android Phone
 1. On your Android phone, open **[Latest GitHub Release](https://github.com/sdm0023/mobile-shop-repair-manager/releases/latest)** in Chrome or any browser.
-2. Under **Assets**, tap the `.apk` file (for example, `MobileRepairShop-v1.0.apk`) to download it.
+2. Scroll to **Assets** and tap the `.apk` file (e.g., `MobileRepairShop-v1.0.apk` or `MobileRepairShop-v1.0-debug.apk`) to download it.
 3. Open the downloaded `.apk` file from your browser downloads or **Files** app.
 4. If Android asks *"For your security, your phone isn't allowed to install unknown apps from this source"*:
    - Tap **Settings** -> turn ON **Allow from this source** -> press Back -> tap **Install**.
 5. Launch **Mobile Repair Shop** and allow notifications when prompted.
 6. **Automatic Updates:** Whenever internet is active on app launch, `VersionCheckService` checks [`version.json`](version.json) on GitHub against `BuildConfig.VERSION_CODE`. If a newer version is available, an **Update Available** banner and prompt appear with **Update Now** and **Later** options.
 
-> **Important Upgrade Note:** Updating over an existing installation preserves all local Room job cards & Khata records only when the new APK uses the same package name (`com.aistudio.mobilerepair.kzptqr`) and same signing keystore (`SHA-1`). Never switch between debug and release signatures on a live shop phone without backing up to Google Drive/Sheets first.
+> **Important Upgrade Note:** Updating over an existing installation preserves all local Room job cards & Khata records only when the new APK uses the same package name (`com.aistudio.mobilerepair.kzptqr`) and same signing keystore (`SHA-1`). Always keep a Google Sheets/Drive backup before switching between Debug and Release APKs.
 
 ---
 
@@ -126,8 +128,8 @@ gradle :app:testDebugUnitTest
 
 ### Publishing New Releases for the In-App Update Checker
 1. Bump `versionCode` and `versionName` in `app/build.gradle.kts` (for example, `versionCode = 2`, `versionName = "1.1"`) and update [`version.json`](version.json) to match.
-2. Add your permanent signing secrets (`RELEASE_KEYSTORE_BASE64`, `STORE_PASSWORD`, `KEY_PASSWORD`) under GitHub Repo **Settings -> Secrets and variables -> Actions** (never commit `.jks` or `.keystore` files).
-3. Push a matching version tag (e.g., `git tag v1.1 && git push origin v1.1`) or run **Actions -> Build & Release Android APK** manually — the workflow builds a consistently signed APK and attaches it to GitHub Releases automatically.
+2. *(Recommended for production)* Add your permanent signing secrets (`RELEASE_KEYSTORE_BASE64`, `STORE_PASSWORD`, `KEY_PASSWORD`) under GitHub Repo **Settings -> Secrets and variables -> Actions** (never commit `.jks` or `.keystore` files). If secrets are not added yet, the workflow automatically builds a `debug.keystore.base64`-signed Debug APK instead.
+3. Push to `main` (or push tag `v1.1` / run **Actions -> Build & Release Android APK** manually) — GitHub Actions builds the `.apk` and attaches it to **Releases -> Latest** automatically.
 4. On user phones, the app automatically checks [`version.json`](version.json) on startup (or manually via **Settings -> App Updates (GitHub)** for `sdm0023/mobile-shop-repair-manager`) and displays the **Update Available** banner/prompt.
 
 ---
