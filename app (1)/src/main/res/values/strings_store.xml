@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <string name="store_title">Store</string>
+    <string name="store_subtitle">Inventory, sales, cash and reports</string>
+    <string name="store_inventory">Inventory</string>
+    <string name="store_inventory_desc">Parts, accessories, stock and suppliers</string>
+    <string name="store_pos">Point of sale</string>
+    <string name="store_pos_desc">Sell accessories and parts over the counter</string>
+    <string name="store_cash">Cash register</string>
+    <string name="store_cash_desc">Today\'s cash, expenses and cut</string>
+    <string name="store_reports">Reports</string>
+    <string name="store_reports_desc">Sales, repairs and profit by period</string>
+    <string name="store_low_stock_badge">%1$d low on stock</string>
+
+    <string name="inv_tab_parts">Parts</string>
+    <string name="inv_tab_suppliers">Suppliers</string>
+    <string name="inv_search_hint">Search name, model, barcode…</string>
+    <string name="inv_filter_all">All</string>
+    <string name="inv_filter_low">Low stock</string>
+    <string name="inv_empty">No parts yet. Tap + to add the first one.</string>
+    <string name="inv_add_part">Add part</string>
+    <string name="inv_edit_part">Edit part</string>
+    <string name="inv_field_name">Name</string>
+    <string name="inv_field_category">Category</string>
+    <string name="inv_field_models">Compatible models</string>
+    <string name="inv_field_stock">Stock</string>
+    <string name="inv_field_min_stock">Minimum stock</string>
+    <string name="inv_field_cost">Cost</string>
+    <string name="inv_field_price">Selling price</string>
+    <string name="inv_field_location">Location</string>
+    <string name="inv_field_barcode">Barcode / SKU</string>
+    <string name="inv_in_stock">In stock: %1$d</string>
+    <string name="inv_low_stock">Low stock</string>
+    <string name="inv_receive_stock">Receive stock</string>
+    <string name="inv_receive_title">Receive stock: %1$s</string>
+    <string name="inv_field_quantity">Quantity</string>
+    <string name="inv_field_unit_cost">Unit cost</string>
+    <string name="inv_supplier_none">No supplier</string>
+    <string name="inv_delete_part_title">Delete part?</string>
+    <string name="inv_delete_part_body">%1$s will be removed from the inventory. Past sales keep their history.</string>
+    <string name="inv_margin">Margin %1$s</string>
+
+    <string name="sup_empty">No suppliers yet. Tap + to add one.</string>
+    <string name="sup_add">Add supplier</string>
+    <string name="sup_edit">Edit supplier</string>
+    <string name="sup_field_name">Name</string>
+    <string name="sup_field_phone">Phone</string>
+    <string name="sup_field_notes">Notes</string>
+    <string name="sup_delete_title">Delete supplier?</string>
+
+    <string name="pos_search_hint">Search product or scan code…</string>
+    <string name="pos_cart_empty">The cart is empty. Tap a product to add it.</string>
+    <string name="pos_cart_title">Cart</string>
+    <string name="pos_custom_item">Custom item</string>
+    <string name="pos_custom_name">Item or service</string>
+    <string name="pos_custom_price">Price</string>
+    <string name="pos_discount">Discount</string>
+    <string name="pos_customer">Customer (optional)</string>
+    <string name="pos_payment_mode">Payment method</string>
+    <string name="pos_subtotal">Subtotal</string>
+    <string name="pos_total">Total</string>
+    <string name="pos_charge">Charge</string>
+    <string name="pos_clear">Clear cart</string>
+    <string name="pos_sale_done">Sale completed: %1$s</string>
+    <string name="pos_no_products">No matching products</string>
+
+    <string name="pay_cash">Cash</string>
+    <string name="pay_card">Card</string>
+    <string name="pay_transfer">Transfer</string>
+    <string name="pay_upi">UPI</string>
+
+    <string name="cash_title">Cash register</string>
+    <string name="cash_expected">Expected cash in drawer</string>
+    <string name="cash_today_breakdown">Today by payment method</string>
+    <string name="cash_sales_today">Today\'s sales</string>
+    <string name="cash_movements">Cash movements</string>
+    <string name="cash_add_in">Cash in</string>
+    <string name="cash_add_expense">Expense</string>
+    <string name="cash_field_amount">Amount</string>
+    <string name="cash_field_note">Note</string>
+    <string name="cash_share_cut">Share cut</string>
+    <string name="cash_no_sales">No sales today.</string>
+    <string name="cash_no_movements">No cash movements today.</string>
+    <string name="cash_void_title">Void this sale?</string>
+    <string name="cash_void_body">The sale is deleted and its items go back to stock.</string>
+    <string name="cash_void">Void sale</string>
+    <string name="cash_repairs_note">Repairs count when the job is marked as paid.</string>
+
+    <string name="rep_title">Reports</string>
+    <string name="rep_today">Today</string>
+    <string name="rep_7_days">7 days</string>
+    <string name="rep_30_days">30 days</string>
+    <string name="rep_revenue">Revenue</string>
+    <string name="rep_sales">Sales</string>
+    <string name="rep_repairs">Repairs</string>
+    <string name="rep_expenses">Expenses</string>
+    <string name="rep_purchases">Stock purchases</string>
+    <string name="rep_profit">Estimated profit</string>
+    <string name="rep_top_items">Top products</string>
+    <string name="rep_low_stock">Parts to restock</string>
+    <string name="rep_count_sales">%1$d sales</string>
+    <string name="rep_count_repairs">%1$d paid repairs</string>
+    <string name="rep_share">Share report</string>
+    <string name="rep_no_data">No data for this period.</string>
+
+    <string name="job_parts_title">Parts used</string>
+    <string name="job_parts_add">Use part from stock</string>
+    <string name="job_parts_empty">No parts recorded on this repair.</string>
+    <string name="job_parts_pick">Pick a part</string>
+    <string name="job_parts_remove">Return to stock</string>
+
+    <string name="common_save">Save</string>
+    <string name="common_cancel">Cancel</string>
+    <string name="common_delete">Delete</string>
+    <string name="common_add">Add</string>
+    <string name="common_back">Back</string>
+</resources>
