@@ -35,6 +35,7 @@ import androidx.compose.material.icons.filled.DoneAll
 import androidx.compose.material.icons.filled.NewReleases
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Storefront
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -211,6 +212,18 @@ fun DashboardScreen(
                         }
                     },
                     actions = {
+                        IconButton(
+                            onClick = { viewModel.navigateTo(AppScreen.STORE_HUB) },
+                            modifier = Modifier
+                                .defaultMinSize(minHeight = 48.dp, minWidth = 48.dp)
+                                .testTag("topbar_store_btn")
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Storefront,
+                                contentDescription = stringResource(R.string.store_title),
+                                tint = shopColors.topBarContent
+                            )
+                        }
                         IconButton(
                             onClick = { viewModel.navigateTo(AppScreen.KHATA_BOOK) },
                             modifier = Modifier

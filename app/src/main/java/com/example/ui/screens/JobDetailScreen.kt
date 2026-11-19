@@ -587,6 +587,11 @@ fun JobDetailScreen(
                     }
                 }
 
+                // Card 8: Parts used from inventory
+                item {
+                    JobPartsCard(job = job, currency = shopProfile.currencySymbol)
+                }
+
                 // Bottom Action: Print Receipt
                 item {
                     Button(

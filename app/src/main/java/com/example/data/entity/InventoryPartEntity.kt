@@ -15,7 +15,9 @@ data class InventoryPartEntity(
     val purchaseCost: Double,
     val sellingPrice: Double,
     val locationRack: String = "Bin A1",
-    val updatedAt: Long = System.currentTimeMillis()
+    val updatedAt: Long = System.currentTimeMillis(),
+    val barcode: String = "",
+    val supplierId: Long = 0
 ) {
     val isLowStock: Boolean
         get() = quantityInStock <= minStockThreshold

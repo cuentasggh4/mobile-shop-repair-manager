@@ -54,7 +54,12 @@ enum class AppScreen {
     SETTINGS_HOME,
     SHOP_SETTINGS,
     SYNC_MANAGER,
-    RECEIPT_PREVIEW
+    RECEIPT_PREVIEW,
+    STORE_HUB,
+    INVENTORY,
+    POS,
+    CASH_REGISTER,
+    REPORTS
 }
 
 data class DashboardKpis(
@@ -471,8 +476,16 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
             AppScreen.NEW_JOB,
             AppScreen.JOB_DETAIL,
             AppScreen.KHATA_BOOK,
+            AppScreen.STORE_HUB,
             AppScreen.SETTINGS_HOME -> {
                 currentScreen = AppScreen.DASHBOARD
+                true
+            }
+            AppScreen.INVENTORY,
+            AppScreen.POS,
+            AppScreen.CASH_REGISTER,
+            AppScreen.REPORTS -> {
+                currentScreen = AppScreen.STORE_HUB
                 true
             }
             AppScreen.KHATA_DETAIL -> {

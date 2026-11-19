@@ -926,8 +926,9 @@ class ShopRepository(
     suspend fun seedInitialDataIfEmpty() = withContext(Dispatchers.IO) {
         val existingProfile = shopProfileDao.getShopProfileSync()
         if (existingProfile != null) {
-            if (existingProfile.currencySymbol == "$" || existingProfile.currencySymbol.isBlank()) {
-                shopProfileDao.updateProfile(existingProfile.copy(currencySymbol = "₹"))
+            // Keep the currency the user chose. Only fill it in when it is empty.
+            if (existingProfile.currencySymbol.isBlank()) {
+                shopProfileDao.updateProfile(existingProfile.copy(currencySymbol = "$"))
             }
             return@withContext
         }
