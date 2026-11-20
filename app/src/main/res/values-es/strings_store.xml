@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="store_title">Tienda</string>
+    <string name="store_subtitle">Inventario, ventas, caja y reportes</string>
+    <string name="store_inventory">Inventario</string>
+    <string name="store_inventory_desc">Refacciones, accesorios, existencias y proveedores</string>
+    <string name="store_pos">Punto de venta</string>
+    <string name="store_pos_desc">Vende accesorios y refacciones en mostrador</string>
+    <string name="store_cash">Caja</string>
+    <string name="store_cash_desc">Efectivo del día, gastos y corte</string>
+    <string name="store_reports">Reportes</string>
+    <string name="store_reports_desc">Ventas, reparaciones y ganancia por periodo</string>
+    <string name="store_low_stock_badge">%1$d con existencias bajas</string>
+
+    <string name="inv_tab_parts">Refacciones</string>
+    <string name="inv_tab_suppliers">Proveedores</string>
+    <string name="inv_search_hint">Buscar nombre, modelo, código de barras…</string>
+    <string name="inv_filter_all">Todas</string>
+    <string name="inv_filter_low">Existencias bajas</string>
+    <string name="inv_empty">Aún no hay refacciones. Toca + para agregar la primera.</string>
+    <string name="inv_add_part">Agregar refacción</string>
+    <string name="inv_edit_part">Editar refacción</string>
+    <string name="inv_field_name">Nombre</string>
+    <string name="inv_field_category">Categoría</string>
+    <string name="inv_field_models">Modelos compatibles</string>
+    <string name="inv_field_stock">Existencias</string>
+    <string name="inv_field_min_stock">Existencia mínima</string>
+    <string name="inv_field_cost">Costo</string>
+    <string name="inv_field_price">Precio de venta</string>
+    <string name="inv_field_location">Ubicación</string>
+    <string name="inv_field_barcode">Código de barras / SKU</string>
+    <string name="inv_in_stock">En existencia: %1$d</string>
+    <string name="inv_low_stock">Existencia baja</string>
+    <string name="inv_receive_stock">Recibir mercancía</string>
+    <string name="inv_receive_title">Recibir mercancía: %1$s</string>
+    <string name="inv_field_quantity">Cantidad</string>
+    <string name="inv_field_unit_cost">Costo unitario</string>
+    <string name="inv_supplier_none">Sin proveedor</string>
+    <string name="inv_delete_part_title">¿Eliminar refacción?</string>
+    <string name="inv_delete_part_body">%1$s se quitará del inventario. Las ventas anteriores conservan su historial.</string>
+    <string name="inv_margin">Margen %1$s</string>
+
+    <string name="sup_empty">Aún no hay proveedores. Toca + para agregar uno.</string>
+    <string name="sup_add">Agregar proveedor</string>
+    <string name="sup_edit">Editar proveedor</string>
+    <string name="sup_field_name">Nombre</string>
+    <string name="sup_field_phone">Teléfono</string>
+    <string name="sup_field_notes">Notas</string>
+    <string name="sup_delete_title">¿Eliminar proveedor?</string>
+
+    <string name="pos_search_hint">Buscar producto o escanear código…</string>
+    <string name="pos_cart_empty">El carrito está vacío. Toca un producto para agregarlo.</string>
+    <string name="pos_cart_title">Carrito</string>
+    <string name="pos_custom_item">Artículo libre</string>
+    <string name="pos_custom_name">Artículo o servicio</string>
+    <string name="pos_custom_price">Precio</string>
+    <string name="pos_discount">Descuento</string>
+    <string name="pos_customer">Cliente (opcional)</string>
+    <string name="pos_payment_mode">Forma de pago</string>
+    <string name="pos_subtotal">Subtotal</string>
+    <string name="pos_total">Total</string>
+    <string name="pos_charge">Cobrar</string>
+    <string name="pos_clear">Vaciar carrito</string>
+    <string name="pos_sale_done">Venta completada: %1$s</string>
+    <string name="pos_no_products">No hay productos que coincidan</string>
+
+    <string name="pay_cash">Efectivo</string>
+    <string name="pay_card">Tarjeta</string>
+    <string name="pay_transfer">Transferencia</string>
+    <string name="pay_upi">UPI</string>
+
+    <string name="cash_title">Caja</string>
+    <string name="cash_expected">Efectivo esperado en caja</string>
+    <string name="cash_today_breakdown">Hoy por forma de pago</string>
+    <string name="cash_sales_today">Ventas de hoy</string>
+    <string name="cash_movements">Movimientos de efectivo</string>
+    <string name="cash_add_in">Entrada de efectivo</string>
+    <string name="cash_add_expense">Gasto</string>
+    <string name="cash_field_amount">Monto</string>
+    <string name="cash_field_note">Nota</string>
+    <string name="cash_share_cut">Compartir corte</string>
+    <string name="cash_no_sales">Hoy no hay ventas.</string>
+    <string name="cash_no_movements">Hoy no hay movimientos de efectivo.</string>
+    <string name="cash_void_title">¿Anular esta venta?</string>
+    <string name="cash_void_body">La venta se elimina y sus artículos regresan al inventario.</string>
+    <string name="cash_void">Anular venta</string>
+    <string name="cash_repairs_note">Las reparaciones cuentan cuando la orden se marca como pagada.</string>
+
+    <string name="rep_title">Reportes</string>
+    <string name="rep_today">Hoy</string>
+    <string name="rep_7_days">7 días</string>
+    <string name="rep_30_days">30 días</string>
+    <string name="rep_revenue">Ingresos</string>
+    <string name="rep_sales">Ventas</string>
+    <string name="rep_repairs">Reparaciones</string>
+    <string name="rep_expenses">Gastos</string>
+    <string name="rep_purchases">Compras de mercancía</string>
+    <string name="rep_profit">Ganancia estimada</string>
+    <string name="rep_top_items">Productos más vendidos</string>
+    <string name="rep_low_stock">Refacciones por reponer</string>
+    <string name="rep_count_sales">%1$d ventas</string>
+    <string name="rep_count_repairs">%1$d reparaciones pagadas</string>
+    <string name="rep_share">Compartir reporte</string>
+    <string name="rep_no_data">No hay datos en este periodo.</string>
+
+    <string name="job_parts_title">Refacciones usadas</string>
+    <string name="job_parts_add">Usar refacción del inventario</string>
+    <string name="job_parts_empty">No hay refacciones registradas en esta reparación.</string>
+    <string name="job_parts_pick">Elige una refacción</string>
+    <string name="job_parts_remove">Devolver al inventario</string>
+
+    <string name="common_save">Guardar</string>
+    <string name="common_cancel">Cancelar</string>
+    <string name="common_delete">Eliminar</string>
+    <string name="common_add">Agregar</string>
+    <string name="common_back">Volver</string>
+</resources>

@@ -29,18 +29,18 @@ object NotificationHelper {
 
         val repairChannel = NotificationChannel(
             CHANNEL_REPAIR_UPDATES,
-            context.getString(R.string.notif_channel_repairs_name),
+            LanguageManager.getString(context, R.string.notif_channel_repairs_name),
             NotificationManager.IMPORTANCE_DEFAULT
         ).apply {
-            description = context.getString(R.string.notif_channel_repairs_desc)
+            description = LanguageManager.getString(context, R.string.notif_channel_repairs_desc)
         }
 
         val backupChannel = NotificationChannel(
             CHANNEL_BACKUP_SYNC,
-            context.getString(R.string.notif_channel_backup_name),
+            LanguageManager.getString(context, R.string.notif_channel_backup_name),
             NotificationManager.IMPORTANCE_LOW
         ).apply {
-            description = context.getString(R.string.notif_channel_backup_desc)
+            description = LanguageManager.getString(context, R.string.notif_channel_backup_desc)
         }
 
         manager.createNotificationChannel(repairChannel)
@@ -70,8 +70,8 @@ object NotificationHelper {
         if (!hasNotificationPermission(context)) return
         ensureChannels(context)
 
-        val title = context.getString(R.string.notif_job_created_title, jobNumber)
-        val body = context.getString(R.string.notif_job_created_body, customerName, deviceName)
+        val title = LanguageManager.getString(context, R.string.notif_job_created_title, jobNumber)
+        val body = LanguageManager.getString(context, R.string.notif_job_created_body, customerName, deviceName)
         postNotification(
             context = context,
             channelId = CHANNEL_REPAIR_UPDATES,
@@ -94,20 +94,20 @@ object NotificationHelper {
         ensureChannels(context)
 
         val stageLabel = when (stage) {
-            RepairStage.DIAGNOSTIC -> context.getString(R.string.status_diagnostics)
-            RepairStage.WAITING_FOR_PARTS -> context.getString(R.string.status_waiting_parts)
-            RepairStage.IN_PROGRESS -> context.getString(R.string.status_in_progress)
-            RepairStage.READY_FOR_PICKUP -> context.getString(R.string.status_ready_deliver)
-            RepairStage.DELIVERED -> context.getString(R.string.status_delivered)
-            RepairStage.CANCELLED -> context.getString(R.string.status_cancelled)
+            RepairStage.DIAGNOSTIC -> LanguageManager.getString(context, R.string.status_diagnostics)
+            RepairStage.WAITING_FOR_PARTS -> LanguageManager.getString(context, R.string.status_waiting_parts)
+            RepairStage.IN_PROGRESS -> LanguageManager.getString(context, R.string.status_in_progress)
+            RepairStage.READY_FOR_PICKUP -> LanguageManager.getString(context, R.string.status_ready_deliver)
+            RepairStage.DELIVERED -> LanguageManager.getString(context, R.string.status_delivered)
+            RepairStage.CANCELLED -> LanguageManager.getString(context, R.string.status_cancelled)
         }
 
         val title = if (stage == RepairStage.READY_FOR_PICKUP) {
-            context.getString(R.string.notif_ready_pickup_title, jobNumber)
+            LanguageManager.getString(context, R.string.notif_ready_pickup_title, jobNumber)
         } else {
-            context.getString(R.string.notif_stage_updated_title, jobNumber, stageLabel)
+            LanguageManager.getString(context, R.string.notif_stage_updated_title, jobNumber, stageLabel)
         }
-        val body = context.getString(R.string.notif_stage_updated_body, customerName, deviceName, stageLabel)
+        val body = LanguageManager.getString(context, R.string.notif_stage_updated_body, customerName, deviceName, stageLabel)
 
         postNotification(
             context = context,
@@ -128,9 +128,9 @@ object NotificationHelper {
         ensureChannels(context)
 
         val title = if (success) {
-            context.getString(R.string.notif_backup_success_title)
+            LanguageManager.getString(context, R.string.notif_backup_success_title)
         } else {
-            context.getString(R.string.notif_backup_failed_title)
+            LanguageManager.getString(context, R.string.notif_backup_failed_title)
         }
 
         postNotification(
@@ -151,8 +151,8 @@ object NotificationHelper {
             context = context,
             channelId = CHANNEL_REPAIR_UPDATES,
             notificationId = 9999,
-            title = context.getString(R.string.notif_test_title),
-            body = context.getString(R.string.notif_test_body),
+            title = LanguageManager.getString(context, R.string.notif_test_title),
+            body = LanguageManager.getString(context, R.string.notif_test_body),
             jobId = null
         )
         return true
@@ -179,11 +179,11 @@ object NotificationHelper {
 
         val notification = NotificationCompat.Builder(context, CHANNEL_REPAIR_UPDATES)
             .setSmallIcon(R.mipmap.ic_launcher)
-            .setContentTitle(context.getString(R.string.notif_update_available_title, latestVersion))
-            .setContentText(context.getString(R.string.notif_update_available_body))
+            .setContentTitle(LanguageManager.getString(context, R.string.notif_update_available_title, latestVersion))
+            .setContentText(LanguageManager.getString(context, R.string.notif_update_available_body))
             .setStyle(
                 NotificationCompat.BigTextStyle()
-                    .bigText(context.getString(R.string.notif_update_available_body))
+                    .bigText(LanguageManager.getString(context, R.string.notif_update_available_body))
             )
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setAutoCancel(true)

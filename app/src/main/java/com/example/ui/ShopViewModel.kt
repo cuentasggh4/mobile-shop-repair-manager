@@ -54,7 +54,12 @@ enum class AppScreen {
     SETTINGS_HOME,
     SHOP_SETTINGS,
     SYNC_MANAGER,
-    RECEIPT_PREVIEW
+    RECEIPT_PREVIEW,
+    STORE_HUB,
+    INVENTORY,
+    POS,
+    CASH_REGISTER,
+    REPORTS
 }
 
 data class DashboardKpis(
@@ -139,7 +144,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         NotificationHelper.ensureChannels(application)
         val db = AppDatabase.getInstance(application)
         val syncManager = GoogleSheetsSyncManager(application, db.jobCardDao(), db.shopProfileDao())
-        repository = ShopRepository(db, syncManager)
+        repository = ShopRepository(getApplication<Application>(), db, syncManager)
         viewModelScope.launch {
             try {
                 repository.seedInitialDataIfEmpty()
@@ -471,8 +476,16 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
             AppScreen.NEW_JOB,
             AppScreen.JOB_DETAIL,
             AppScreen.KHATA_BOOK,
+            AppScreen.STORE_HUB,
             AppScreen.SETTINGS_HOME -> {
                 currentScreen = AppScreen.DASHBOARD
+                true
+            }
+            AppScreen.INVENTORY,
+            AppScreen.POS,
+            AppScreen.CASH_REGISTER,
+            AppScreen.REPORTS -> {
+                currentScreen = AppScreen.STORE_HUB
                 true
             }
             AppScreen.KHATA_DETAIL -> {
@@ -590,19 +603,19 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
 
     fun submitNewJob(onSuccess: (Long) -> Unit, onError: (String) -> Unit) {
         if (newCustomerName.isBlank()) {
-            onError("Customer Name is required")
+            onError(com.example.util.LanguageManager.getString(getApplication<Application>(), R.string.err_customer_name_required))
             return
         }
         if (newCustomerPhone.isBlank()) {
-            onError("Customer Phone number is required")
+            onError(com.example.util.LanguageManager.getString(getApplication<Application>(), R.string.err_customer_phone_required))
             return
         }
         if (newDeviceModel.isBlank()) {
-            onError("Device Model is required")
+            onError(com.example.util.LanguageManager.getString(getApplication<Application>(), R.string.err_device_model_required))
             return
         }
         if (newIssueDescription.isBlank()) {
-            onError("Fault complaint description is required")
+            onError(com.example.util.LanguageManager.getString(getApplication<Application>(), R.string.err_fault_required))
             return
         }
 
@@ -610,7 +623,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
             0.0
         } else {
             newEstimatedCost.trim().toDoubleOrNull()?.takeIf { it.isFinite() && it >= 0.0 } ?: run {
-                onError(getApplication<Application>().getString(R.string.error_invalid_amount))
+                onError(com.example.util.LanguageManager.getString(getApplication<Application>(), R.string.error_invalid_amount))
                 return
             }
         }
@@ -618,7 +631,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
             0.0
         } else {
             newAdvancePaid.trim().toDoubleOrNull()?.takeIf { it.isFinite() && it >= 0.0 } ?: run {
-                onError(getApplication<Application>().getString(R.string.error_invalid_amount))
+                onError(com.example.util.LanguageManager.getString(getApplication<Application>(), R.string.error_invalid_amount))
                 return
             }
         }
@@ -811,7 +824,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                                 BackupScheduler.scheduleNightlyBackup(getApplication())
                             }
                             onMessage(
-                                getApplication<Application>().getString(
+                                com.example.util.LanguageManager.getString(getApplication<Application>(), 
                                     R.string.sheets_sync_success,
                                     summary.pulledCount,
                                     summary.pushedCount
@@ -823,13 +836,13 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                         onNeedsConsent(outcome.intentSender)
                     }
                     null -> {
-                        onMessage(getApplication<Application>().getString(R.string.sheets_sync_failed, "Sync unavailable"))
+                        onMessage(com.example.util.LanguageManager.getString(getApplication<Application>(), R.string.sheets_sync_failed, "Sync unavailable"))
                     }
                 }
             } catch (e: Exception) {
                 val msg = e.message ?: "Unknown error"
                 _errorMessage.value = msg
-                onMessage(getApplication<Application>().getString(R.string.sheets_sync_failed, msg))
+                onMessage(com.example.util.LanguageManager.getString(getApplication<Application>(), R.string.sheets_sync_failed, msg))
             } finally {
                 _isSyncing.value = false
             }
@@ -854,7 +867,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                 if (data == null && resultCode != android.app.Activity.RESULT_OK) {
                     val resId = if (runBackup) R.string.backup_failed_toast else R.string.sheets_sync_failed
                     onMessage(
-                        getApplication<Application>().getString(
+                        com.example.util.LanguageManager.getString(getApplication<Application>(), 
                             resId,
                             "OAuth cancelled (resultCode=$resultCode). Check Android OAuth Client & Test Users in Google Cloud."
                         )
@@ -865,7 +878,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                 if (token.isNullOrBlank()) {
                     val resId = if (runBackup) R.string.backup_failed_toast else R.string.sheets_sync_failed
                     onMessage(
-                        getApplication<Application>().getString(
+                        com.example.util.LanguageManager.getString(getApplication<Application>(), 
                             resId,
                             "Authorization cancelled (resultCode=$resultCode)"
                         )
@@ -879,7 +892,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                             BackupScheduler.scheduleNightlyBackup(getApplication())
                         }
                         onMessage(
-                            getApplication<Application>().getString(
+                            com.example.util.LanguageManager.getString(getApplication<Application>(), 
                                 R.string.backup_success_toast,
                                 backupName
                             )
@@ -892,7 +905,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                             BackupScheduler.scheduleNightlyBackup(getApplication())
                         }
                         onMessage(
-                            getApplication<Application>().getString(
+                            com.example.util.LanguageManager.getString(getApplication<Application>(), 
                                 R.string.sheets_sync_success,
                                 summary.pulledCount,
                                 summary.pushedCount
@@ -904,7 +917,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                 val msg = e.message ?: "Authorization failed"
                 _errorMessage.value = msg
                 val resId = if (runBackup) R.string.backup_failed_toast else R.string.sheets_sync_failed
-                onMessage(getApplication<Application>().getString(resId, msg))
+                onMessage(com.example.util.LanguageManager.getString(getApplication<Application>(), resId, msg))
             } finally {
                 _isSyncing.value = false
                 _isBackingUp.value = false
@@ -945,7 +958,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                                 BackupScheduler.scheduleNightlyBackup(getApplication())
                             }
                             onMessage(
-                                getApplication<Application>().getString(
+                                com.example.util.LanguageManager.getString(getApplication<Application>(), 
                                     R.string.backup_success_toast,
                                     backupName
                                 )
@@ -957,13 +970,13 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                         onNeedsConsent(outcome.intentSender)
                     }
                     null -> {
-                        onMessage(getApplication<Application>().getString(R.string.backup_failed_toast, "Backup unavailable"))
+                        onMessage(com.example.util.LanguageManager.getString(getApplication<Application>(), R.string.backup_failed_toast, "Backup unavailable"))
                     }
                 }
             } catch (e: Exception) {
                 val msg = e.message ?: "Unknown error"
                 _errorMessage.value = msg
-                onMessage(getApplication<Application>().getString(R.string.backup_failed_toast, msg))
+                onMessage(com.example.util.LanguageManager.getString(getApplication<Application>(), R.string.backup_failed_toast, msg))
             } finally {
                 _isBackingUp.value = false
             }
@@ -977,7 +990,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         onMessage: (String) -> Unit
     ) {
         if (rawUrlOrId.isBlank()) {
-            onMessage(getApplication<Application>().getString(R.string.sheets_sync_failed, "Empty Sheet URL or ID"))
+            onMessage(com.example.util.LanguageManager.getString(getApplication<Application>(), R.string.sheets_sync_failed, "Empty Sheet URL or ID"))
             return
         }
         viewModelScope.launch {
@@ -986,7 +999,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                 syncNowWithGoogleSheets(activityContext, onNeedsConsent, onMessage)
             } catch (e: Exception) {
                 val msg = e.message ?: "Invalid Spreadsheet ID"
-                onMessage(getApplication<Application>().getString(R.string.sheets_sync_failed, msg))
+                onMessage(com.example.util.LanguageManager.getString(getApplication<Application>(), R.string.sheets_sync_failed, msg))
             }
         }
     }
@@ -996,7 +1009,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
             try {
                 repository.disconnectGoogleSheets()
                 BackupScheduler.cancelNightlyBackup(getApplication())
-                onMessage(getApplication<Application>().getString(R.string.sheets_disconnected_toast))
+                onMessage(com.example.util.LanguageManager.getString(getApplication<Application>(), R.string.sheets_disconnected_toast))
             } catch (e: Exception) {
                 _errorMessage.value = "Failed disconnecting: ${e.message}"
             }
@@ -1054,7 +1067,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
     fun copyWhatsAppMessage(context: Context) {
         try {
             val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as? android.content.ClipboardManager
-            val clip = android.content.ClipData.newPlainText("WhatsApp Repair Update", customWhatsAppText)
+            val clip = android.content.ClipData.newPlainText(context.getString(R.string.wa_clip_label), customWhatsAppText)
             clipboard?.setPrimaryClip(clip)
             Toast.makeText(context, context.getString(R.string.whatsapp_copied_toast), Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {

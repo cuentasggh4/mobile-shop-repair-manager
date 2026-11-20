@@ -35,6 +35,7 @@ import androidx.compose.material.icons.filled.DoneAll
 import androidx.compose.material.icons.filled.NewReleases
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Storefront
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -168,7 +169,7 @@ fun DashboardScreen(
                         ) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = "Close search",
+                                contentDescription = stringResource(R.string.cd_close_search),
                                 tint = shopColors.topBarContent
                             )
                         }
@@ -211,6 +212,18 @@ fun DashboardScreen(
                         }
                     },
                     actions = {
+                        IconButton(
+                            onClick = { viewModel.navigateTo(AppScreen.STORE_HUB) },
+                            modifier = Modifier
+                                .defaultMinSize(minHeight = 48.dp, minWidth = 48.dp)
+                                .testTag("topbar_store_btn")
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Storefront,
+                                contentDescription = stringResource(R.string.store_title),
+                                tint = shopColors.topBarContent
+                            )
+                        }
                         IconButton(
                             onClick = { viewModel.navigateTo(AppScreen.KHATA_BOOK) },
                             modifier = Modifier
@@ -572,7 +585,7 @@ private fun M3JobItemCard(
                     fontFamily = FontFamily.Monospace
                 )
                 Text(
-                    text = "• ${formatRelativeTime(job.updatedAt)}",
+                    text = "• ${formatRelativeTime(job.updatedAt, stringResource(R.string.time_just_now))}",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -771,11 +784,11 @@ private fun UpdateAvailableBanner(
     }
 }
 
-private fun formatRelativeTime(timestamp: Long): String {
+private fun formatRelativeTime(timestamp: Long, justNow: String): String {
     val diff = System.currentTimeMillis() - timestamp
     val hours = diff / (1000 * 60 * 60)
     return when {
-        hours < 1 -> "Just now"
+        hours < 1 -> justNow
         hours < 24 -> "${hours}h"
         else -> SimpleDateFormat("dd MMM", Locale.getDefault()).format(Date(timestamp))
     }

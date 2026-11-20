@@ -253,6 +253,11 @@ fun SettingsHomeScreen(
                     }
                 }
 
+                // Language selector (Spanish default) + WhatsApp country code
+                item {
+                    LanguageCard()
+                }
+
                 // Appearance / Theme Mode Card (System / Light / Dark)
                 item {
                     AppCard(testTag = "card_settings_theme") {

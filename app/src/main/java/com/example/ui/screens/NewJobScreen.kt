@@ -54,6 +54,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -74,11 +75,6 @@ import java.util.Locale
 
 private val BRAND_LIST = listOf(
     "Apple", "Samsung", "Xiaomi", "Vivo", "Oppo", "OnePlus", "Realme", "Google", "Motorola", "Other"
-)
-
-private val COMMON_ISSUES = listOf(
-    "Broken Screen", "No Display", "Battery Drain", "Charging Port", "Water Damage",
-    "Camera Blur", "No Sound/Mic", "Broken Back", "Dead / No Power", "Bootloop/Software"
 )
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
@@ -264,7 +260,7 @@ fun NewJobScreen(
                                                         overflow = TextOverflow.Ellipsis
                                                     )
                                                     Text(
-                                                        text = "${suggestion.customerPhone.ifBlank { "No phone" }} • ${stringResource(R.string.khata_visits_count, suggestion.totalJobsCount)}",
+                                                        text = "${suggestion.customerPhone.ifBlank { stringResource(R.string.label_no_phone) }} • ${stringResource(R.string.khata_visits_count, suggestion.totalJobsCount)}",
                                                         style = MaterialTheme.typography.bodySmall,
                                                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                                                         maxLines = 1,
@@ -447,7 +443,7 @@ fun NewJobScreen(
                             horizontalArrangement = Arrangement.spacedBy(6.dp),
                             verticalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
-                            COMMON_ISSUES.forEach { issue ->
+                            stringArrayResource(R.array.fault_tags).forEach { issue ->
                                 val isSelected = viewModel.newSelectedIssueTags.contains(issue)
                                 FilterChip(
                                     selected = isSelected,
@@ -604,7 +600,7 @@ fun NewJobScreen(
                         onClick = {
                             viewModel.submitNewJob(
                                 onSuccess = { jobId ->
-                                    Toast.makeText(context, "Job Card created", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(context, context.getString(R.string.toast_job_created), Toast.LENGTH_SHORT).show()
                                     viewModel.navigateTo(AppScreen.JOB_DETAIL, jobId)
                                 },
                                 onError = { err ->

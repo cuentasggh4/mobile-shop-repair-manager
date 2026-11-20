@@ -48,8 +48,13 @@ import com.example.ui.AppScreen
 import com.example.ui.ShopViewModel
 import com.example.ui.UpdateCheckUiState
 import com.example.ui.components.WhatsAppPreviewDialog
+import com.example.ui.screens.CashRegisterScreen
 import com.example.ui.screens.DashboardScreen
+import com.example.ui.screens.InventoryScreen
 import com.example.ui.screens.JobDetailScreen
+import com.example.ui.screens.PosScreen
+import com.example.ui.screens.ReportsScreen
+import com.example.ui.screens.StoreHubScreen
 import com.example.ui.screens.KhataBookScreen
 import com.example.ui.screens.KhataDetailScreen
 import com.example.ui.screens.NewJobScreen
@@ -63,6 +68,11 @@ import com.example.util.NotificationHelper
 class MainActivity : ComponentActivity() {
 
     private var pendingNotificationJobId: Long = -1L
+
+    // Apply the language chosen in Settings (Spanish by default).
+    override fun attachBaseContext(newBase: android.content.Context) {
+        super.attachBaseContext(com.example.util.LanguageManager.wrap(newBase))
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -131,6 +141,11 @@ class MainActivity : ComponentActivity() {
                         AppScreen.SETTINGS_HOME -> SettingsHomeScreen(viewModel = viewModel)
                         AppScreen.SHOP_SETTINGS -> ShopSettingsScreen(viewModel = viewModel)
                         AppScreen.SYNC_MANAGER -> SyncManagerScreen(viewModel = viewModel)
+                        AppScreen.STORE_HUB -> StoreHubScreen(viewModel = viewModel)
+                        AppScreen.INVENTORY -> InventoryScreen(viewModel = viewModel)
+                        AppScreen.POS -> PosScreen(viewModel = viewModel)
+                        AppScreen.CASH_REGISTER -> CashRegisterScreen(viewModel = viewModel)
+                        AppScreen.REPORTS -> ReportsScreen(viewModel = viewModel)
                     }
                 }
 

@@ -88,7 +88,7 @@ fun RepairStageBadge(
                     .background(stage.badgeColor)
             )
             Text(
-                text = stage.title,
+                text = stringResource(com.example.util.Labels.stageRes(stage)),
                 color = stage.badgeColor,
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Bold
@@ -122,7 +122,7 @@ fun PaymentStatusBadge(
                     modifier = Modifier.size(12.dp)
                 )
                 Text(
-                    text = "PAID",
+                    text = stringResource(R.string.payment_paid),
                     color = EmeraldSuccess,
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Bold

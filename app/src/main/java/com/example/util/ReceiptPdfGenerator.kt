@@ -10,6 +10,7 @@ import android.graphics.pdf.PdfDocument
 import android.text.Layout
 import android.text.StaticLayout
 import android.text.TextPaint
+import com.example.R
 import com.example.data.database.Converters
 import com.example.data.entity.JobCardEntity
 import com.example.data.entity.ShopProfileEntity
@@ -41,7 +42,7 @@ object ReceiptPdfGenerator {
         val outFile = File(receiptsDir, "JobCard_${safeJobNumber}.pdf")
 
         val pdfDocument = PdfDocument()
-        drawReceiptContent(pdfDocument, job, profile)
+        drawReceiptContent(pdfDocument, job, profile, LanguageManager.wrap(context))
 
         FileOutputStream(outFile).use { fos ->
             pdfDocument.writeTo(fos)
@@ -54,7 +55,8 @@ object ReceiptPdfGenerator {
     private fun drawReceiptContent(
         pdfDocument: PdfDocument,
         job: JobCardEntity,
-        profile: ShopProfileEntity
+        profile: ShopProfileEntity,
+        lc: Context
     ) {
         val contentWidth = PAGE_WIDTH - (MARGIN_X * 2)
         val rightEdge = PAGE_WIDTH - MARGIN_X
@@ -138,12 +140,12 @@ object ReceiptPdfGenerator {
                 val contPaint = TextPaint(sectionHeaderPaint).apply { textSize = 9.5f }
                 val pageRightPaint = TextPaint(smallMutedPaint).apply { textAlign = Paint.Align.RIGHT }
                 canvas.drawText(
-                    "${profile.shopName.uppercase()} • JOB CARD #${job.jobNumber} (Cont.)",
+                    "${profile.shopName.uppercase()} • #${job.jobNumber} (${lc.getString(R.string.rc_continued)})",
                     MARGIN_X,
                     y,
                     contPaint
                 )
-                canvas.drawText("Page $pageNumber", rightEdge, y, pageRightPaint)
+                canvas.drawText(lc.getString(R.string.rc_page, pageNumber), rightEdge, y, pageRightPaint)
                 y += 8f
                 canvas.drawLine(MARGIN_X, y, rightEdge, y, dividerPaint)
                 y += 16f
@@ -210,7 +212,7 @@ object ReceiptPdfGenerator {
                 textSize = 15f
                 typeface = Typeface.create(Typeface.MONOSPACE, Typeface.BOLD)
             }
-            canvas.drawText("JOB CARD RECEIPT", MARGIN_X, y, jobTitlePaint)
+            canvas.drawText(lc.getString(R.string.rc_receipt_title), MARGIN_X, y, jobTitlePaint)
             canvas.drawText("#${job.jobNumber}", MARGIN_X, y + 17f, jobNumberPaint)
 
             val barWidths = listOf(3f, 1.5f, 2.5f, 4f, 1.5f, 3f, 2f, 1.5f, 4f, 2f, 1.5f, 3f, 2.5f, 4f, 1.5f)
@@ -232,14 +234,14 @@ object ReceiptPdfGenerator {
 
             // 3. Customer & Device Two-Column Summary Box
             val infoPairsLeft = buildList {
-                add("Customer" to job.customerName)
-                add("Phone" to job.customerPhone)
-                add("Status" to job.stage.title)
+                add(lc.getString(R.string.rc_customer) to job.customerName)
+                add(lc.getString(R.string.rc_phone) to job.customerPhone)
+                add(lc.getString(R.string.rc_status) to lc.getString(Labels.stageRes(job.stage)))
             }
             val infoPairsRight = buildList {
-                add("Device" to "${job.deviceBrand} ${job.deviceModel}".trim())
-                if (job.deviceColor.isNotBlank()) add("Color" to job.deviceColor)
-                if (job.imeiOrSerial.isNotBlank()) add("IMEI / SN" to job.imeiOrSerial)
+                add(lc.getString(R.string.rc_device) to "${job.deviceBrand} ${job.deviceModel}".trim())
+                if (job.deviceColor.isNotBlank()) add(lc.getString(R.string.rc_color) to job.deviceColor)
+                if (job.imeiOrSerial.isNotBlank()) add(lc.getString(R.string.rc_imei) to job.imeiOrSerial)
             }
 
             val maxRows = maxOf(infoPairsLeft.size, infoPairsRight.size)
@@ -274,10 +276,10 @@ object ReceiptPdfGenerator {
 
             // 4. Reported Issue Section
             ensureSpace(32f)
-            canvas.drawText("REPORTED PROBLEM / COMPLAINT", MARGIN_X, y, sectionHeaderPaint)
+            canvas.drawText(lc.getString(R.string.rc_reported_problem), MARGIN_X, y, sectionHeaderPaint)
             y += 6f
             drawPaginatedText(
-                text = job.issueDescription.ifBlank { "No issue description provided" },
+                text = job.issueDescription.ifBlank { lc.getString(R.string.rc_no_issue) },
                 paint = bodyPaint,
                 x = MARGIN_X,
                 maxWidth = contentWidth.toInt()
@@ -306,14 +308,14 @@ object ReceiptPdfGenerator {
                 ensureSpace(16f)
                 rowItems.forEachIndexed { colIndex, entry ->
                     val itemX = MARGIN_X + (colIndex * chkColWidth)
-                    val statusLabel = entry.value.label
+                    val statusLabel = lc.getString(Labels.conditionRes(entry.value))
                     statusTextPaint.color = when (entry.value) {
                         ConditionStatus.WORKING -> emeraldColor
                         ConditionStatus.DEFECTIVE -> Color.parseColor("#DC2626")
                         ConditionStatus.UNTESTED -> mutedText
                     }
                     canvas.drawText(
-                        truncateText("${entry.key}:", chkItemPaint, chkColWidth - 36f),
+                        truncateText("${Labels.checklistRes(entry.key)?.let { lc.getString(it) } ?: entry.key}:", chkItemPaint, chkColWidth - 36f),
                         itemX,
                         y,
                         chkItemPaint
@@ -332,16 +334,16 @@ object ReceiptPdfGenerator {
             val currency = profile.currencySymbol
             val totalCharge = if (job.finalCost > 0.0) job.finalCost else job.estimatedCost
             val billingRows = mutableListOf(
-                "Repair Estimate / Final Charge" to "$currency${String.format(Locale.US, "%.2f", totalCharge)}",
-                "Advance Paid" to "-$currency${String.format(Locale.US, "%.2f", job.advancePaid)}"
+                lc.getString(R.string.rc_estimate_charge) to "$currency${String.format(Locale.US, "%.2f", totalCharge)}",
+                lc.getString(R.string.rc_advance_paid) to "-$currency${String.format(Locale.US, "%.2f", job.advancePaid)}"
             )
             if (job.discount > 0.0) {
-                billingRows.add("Discount" to "-$currency${String.format(Locale.US, "%.2f", job.discount)}")
+                billingRows.add(lc.getString(R.string.rc_discount) to "-$currency${String.format(Locale.US, "%.2f", job.discount)}")
             }
             val billBoxHeight = 14f + (billingRows.size * 15f) + 28f
             ensureSpace(billBoxHeight + 24f)
 
-            canvas.drawText("BILLING & PAYMENT SUMMARY", MARGIN_X, y, sectionHeaderPaint)
+            canvas.drawText(lc.getString(R.string.rc_billing_summary), MARGIN_X, y, sectionHeaderPaint)
             y += 8f
 
             val billBoxTop = y
@@ -360,7 +362,7 @@ object ReceiptPdfGenerator {
             canvas.drawLine(MARGIN_X + 10f, billY - 6f, rightEdge - 10f, billY - 6f, dividerPaint)
             billY += 9f
 
-            val balanceLabel = if (job.isPaid) "PAID IN FULL (${job.paymentMode})" else "NET BALANCE DUE"
+            val balanceLabel = if (job.isPaid) lc.getString(R.string.rc_paid_in_full, job.paymentMode) else lc.getString(R.string.rc_net_balance_due)
             val balanceTextPaint = TextPaint(Paint.ANTI_ALIAS_FLAG).apply {
                 color = darkText
                 textSize = 11f
@@ -380,17 +382,17 @@ object ReceiptPdfGenerator {
             // 7. Delivery & Handover Record (if Delivered)
             if (job.stage == RepairStage.DELIVERED && job.deliveredAt != null) {
                 ensureSpace(58f)
-                canvas.drawText("DELIVERY & HANDOVER RECORD", MARGIN_X, y, sectionHeaderPaint)
+                canvas.drawText(lc.getString(R.string.rc_delivery_record), MARGIN_X, y, sectionHeaderPaint)
                 y += 12f
                 val recipientStr = if (!job.pickedUpByOriginalCustomer && job.recipientName.isNotBlank()) {
-                    "${job.recipientName} (${job.recipientPhone}) - Representative"
+                    "${job.recipientName} (${job.recipientPhone}) - ${lc.getString(R.string.rc_representative)}"
                 } else {
-                    "${job.customerName} (${job.customerPhone}) - Original Customer"
+                    "${job.customerName} (${job.customerPhone}) - ${lc.getString(R.string.rc_original_customer)}"
                 }
                 val deliveredAtStr = dateFormat.format(Date(job.deliveredAt))
-                canvas.drawText("Picked Up By: $recipientStr", MARGIN_X, y, bodyPaint)
+                canvas.drawText("${lc.getString(R.string.rc_picked_up_by)}: $recipientStr", MARGIN_X, y, bodyPaint)
                 y += 13f
-                canvas.drawText("Delivered On: $deliveredAtStr", MARGIN_X, y, smallMutedPaint)
+                canvas.drawText("${lc.getString(R.string.rc_delivered_on)}: $deliveredAtStr", MARGIN_X, y, smallMutedPaint)
                 y += 12f
                 canvas.drawLine(MARGIN_X, y, rightEdge, y, dividerPaint)
                 y += 12f
@@ -399,7 +401,7 @@ object ReceiptPdfGenerator {
             // 8. Terms & Conditions (Paginated cleanly)
             if (profile.termsAndConditions.isNotBlank()) {
                 ensureSpace(32f)
-                canvas.drawText("TERMS & CONDITIONS", MARGIN_X, y, sectionHeaderPaint)
+                canvas.drawText(lc.getString(R.string.rc_terms), MARGIN_X, y, sectionHeaderPaint)
                 y += 6f
                 drawPaginatedText(
                     text = profile.termsAndConditions,
@@ -415,10 +417,10 @@ object ReceiptPdfGenerator {
             val sigLineY = PAGE_HEIGHT - 44f
             val sigWidth = 140f
             canvas.drawLine(MARGIN_X, sigLineY, MARGIN_X + sigWidth, sigLineY, strongDividerPaint)
-            canvas.drawText("Customer Signature", MARGIN_X + 24f, sigLineY + 13f, labelPaint)
+            canvas.drawText(lc.getString(R.string.rc_customer_signature), MARGIN_X + 24f, sigLineY + 13f, labelPaint)
 
             canvas.drawLine(rightEdge - sigWidth, sigLineY, rightEdge, sigLineY, strongDividerPaint)
-            canvas.drawText("Technician Signature", rightEdge - sigWidth + 20f, sigLineY + 13f, labelPaint)
+            canvas.drawText(lc.getString(R.string.rc_technician_signature), rightEdge - sigWidth + 20f, sigLineY + 13f, labelPaint)
         } finally {
             currentPage?.let { pdfDocument.finishPage(it) }
         }

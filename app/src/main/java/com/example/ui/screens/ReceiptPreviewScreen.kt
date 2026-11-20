@@ -107,7 +107,7 @@ fun ReceiptPreviewScreen(
                         onClick = { viewModel.navigateBack() },
                         modifier = Modifier.defaultMinSize(minHeight = 48.dp, minWidth = 48.dp)
                     ) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = shopColors.topBarContent)
+                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.common_back), tint = shopColors.topBarContent)
                     }
                 },
                 actions = {
@@ -197,7 +197,7 @@ fun ReceiptPreviewScreen(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Column {
-                                    Text("JOB CARD RECEIPT", style = MaterialTheme.typography.titleSmall, color = Color.Black)
+                                    Text(stringResource(R.string.rc_receipt_title), style = MaterialTheme.typography.titleSmall, color = Color.Black)
                                     Text(
                                         text = "#${job.jobNumber}",
                                         style = MaterialTheme.typography.titleMedium,
@@ -229,16 +229,16 @@ fun ReceiptPreviewScreen(
                             HorizontalDivider(color = Color.LightGray)
 
                             // Customer & Device Table
-                            SlipRow("Customer", job.customerName)
-                            SlipRow("Phone", job.customerPhone)
-                            SlipRow("Device", "${job.deviceBrand} ${job.deviceModel}")
-                            if (job.deviceColor.isNotBlank()) SlipRow("Color", job.deviceColor)
-                            if (job.imeiOrSerial.isNotBlank()) SlipRow("IMEI / SN", job.imeiOrSerial)
+                            SlipRow(stringResource(R.string.rc_customer), job.customerName)
+                            SlipRow(stringResource(R.string.rc_phone), job.customerPhone)
+                            SlipRow(stringResource(R.string.rc_device), "${job.deviceBrand} ${job.deviceModel}")
+                            if (job.deviceColor.isNotBlank()) SlipRow(stringResource(R.string.rc_color), job.deviceColor)
+                            if (job.imeiOrSerial.isNotBlank()) SlipRow(stringResource(R.string.rc_imei), job.imeiOrSerial)
 
                             HorizontalDivider(color = Color.LightGray)
 
                             Text(
-                                text = "REPORTED PROBLEM / COMPLAINT:",
+                                text = stringResource(R.string.rc_reported_problem) + ":",
                                 style = MaterialTheme.typography.titleSmall,
                                 color = Color.Black
                             )
@@ -261,10 +261,10 @@ fun ReceiptPreviewScreen(
 
                             // Billing Breakdown
                             val totalCharge = if (job.finalCost > 0) job.finalCost else job.estimatedCost
-                            SlipRow("Repair Estimate / Charge", "${shopProfile.currencySymbol}${String.format("%.2f", totalCharge)}")
-                            SlipRow("Advance Deposit", "-${shopProfile.currencySymbol}${String.format("%.2f", job.advancePaid)}")
+                            SlipRow(stringResource(R.string.rc_estimate_charge), "${shopProfile.currencySymbol}${String.format("%.2f", totalCharge)}")
+                            SlipRow(stringResource(R.string.rc_advance_paid), "-${shopProfile.currencySymbol}${String.format("%.2f", job.advancePaid)}")
                             if (job.discount > 0) {
-                                SlipRow("Discount", "-${shopProfile.currencySymbol}${String.format("%.2f", job.discount)}")
+                                SlipRow(stringResource(R.string.rc_discount), "-${shopProfile.currencySymbol}${String.format("%.2f", job.discount)}")
                             }
 
                             HorizontalDivider(color = Color.Black, thickness = 1.dp)
@@ -276,7 +276,7 @@ fun ReceiptPreviewScreen(
                                 val balanceLabel = if (job.isPaid) {
                                     "${stringResource(R.string.payment_paid)} (${job.paymentMode})"
                                 } else {
-                                    "NET BALANCE DUE"
+                                    stringResource(R.string.rc_net_balance_due)
                                 }
                                 Text(balanceLabel, style = MaterialTheme.typography.titleMedium, color = Color.Black)
                                 Text(
@@ -287,7 +287,7 @@ fun ReceiptPreviewScreen(
                             }
 
                             Spacer(modifier = Modifier.height(4.dp))
-                            Text("TERMS & CONDITIONS:", style = MaterialTheme.typography.titleSmall, color = Color.Black)
+                            Text(stringResource(R.string.rc_terms) + ":", style = MaterialTheme.typography.titleSmall, color = Color.Black)
                             Text(
                                 text = shopProfile.termsAndConditions,
                                 style = MaterialTheme.typography.bodyMedium,
@@ -305,13 +305,13 @@ fun ReceiptPreviewScreen(
                                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                     Box(modifier = Modifier.width(110.dp).height(1.dp).background(Color.Black))
                                     Spacer(modifier = Modifier.height(4.dp))
-                                    Text("Customer Signature", style = MaterialTheme.typography.bodyMedium, color = Color.Black)
+                                    Text(stringResource(R.string.rc_customer_signature), style = MaterialTheme.typography.bodyMedium, color = Color.Black)
                                 }
 
                                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                     Box(modifier = Modifier.width(110.dp).height(1.dp).background(Color.Black))
                                     Spacer(modifier = Modifier.height(4.dp))
-                                    Text("Technician Signature", style = MaterialTheme.typography.bodyMedium, color = Color.Black)
+                                    Text(stringResource(R.string.rc_technician_signature), style = MaterialTheme.typography.bodyMedium, color = Color.Black)
                                 }
                             }
                         }

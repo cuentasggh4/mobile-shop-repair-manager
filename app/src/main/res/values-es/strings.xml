@@ -1,0 +1,303 @@
+<resources>
+    <string name="app_name">Taller de Reparación Móvil</string>
+    <string name="nav_dashboard">Panel</string>
+    <string name="nav_settings">Ajustes</string>
+    <string name="nav_new_job">Nueva orden</string>
+
+    <!-- Dashboard & KPIs -->
+    <string name="dashboard_title">Taller de Reparación Móvil</string>
+    <string name="dashboard_subtitle">Centro de reparación en mostrador</string>
+    <string name="kpi_active_repairs">Reparaciones activas</string>
+    <string name="kpi_ready_deliver">Listas para entregar</string>
+    <string name="kpi_pending_dues">Adeudos pendientes</string>
+    <string name="search_hint">Buscar por teléfono, nombre del cliente, IMEI, folio…</string>
+    <string name="filter_all">Todas</string>
+
+    <!-- Repair Status Lifecycle -->
+    <string name="status_pending">Pendiente</string>
+    <string name="status_in_progress">En proceso</string>
+    <string name="status_repaired">Reparado</string>
+    <string name="status_ready_deliver">Listo para entregar</string>
+    <string name="status_cancelled">Cancelado</string>
+    <string name="status_cannot_repair">Sin reparación</string>
+    <string name="status_delivered">Entregado</string>
+    <string name="status_diagnostics">Diagnóstico</string>
+    <string name="status_waiting_parts">Esperando refacciones</string>
+
+    <!-- Payment Badges -->
+    <string name="payment_paid">PAGADO</string>
+    <string name="payment_due">SALDO PENDIENTE</string>
+
+    <!-- Job Intake Form -->
+    <string name="intake_title">Recepción de equipo</string>
+    <string name="intake_subtitle">Orden de servicio y registro de estado en 12 puntos</string>
+    <string name="section_customer_info">Datos del cliente</string>
+    <string name="section_customer_subtitle">Contacto para avisos y verificación del equipo</string>
+    <string name="label_customer_name">Nombre completo del cliente *</string>
+    <string name="label_customer_phone">Teléfono / WhatsApp *</string>
+    <string name="section_device_specs">Datos del equipo</string>
+    <string name="section_device_subtitle">Marca y características del equipo</string>
+    <string name="label_device_brand">Marca</string>
+    <string name="label_device_model">Modelo *</string>
+    <string name="label_device_color">Color del equipo</string>
+    <string name="label_device_imei">IMEI / Número de serie</string>
+    <string name="label_device_lock">Nota de código / patrón</string>
+    <string name="section_fault_info">Falla reportada</string>
+    <string name="section_fault_subtitle">Elige etiquetas comunes y describe la falla</string>
+    <string name="label_fault_description">Falla / detalles *</string>
+    <string name="section_checklist">Revisión de estado en 12 puntos</string>
+    <string name="section_checklist_subtitle">Inspección física antes de pasar al banco de trabajo</string>
+    <string name="section_billing">Cobro y cotización</string>
+    <string name="section_billing_subtitle">Presupuesto inicial y anticipo</string>
+    <string name="label_estimated_cost">Costo estimado</string>
+    <string name="label_advance_paid">Anticipo recibido</string>
+    <string name="label_tech_notes">Notas internas del técnico</string>
+    <string name="btn_create_job">Crear orden y generar comprobante</string>
+
+    <!-- 12-Point Checklist Items -->
+    <string name="check_touch">Pantalla táctil</string>
+    <string name="check_display">Pantalla / LCD</string>
+    <string name="check_camera_front">Cámara frontal</string>
+    <string name="check_camera_rear">Cámara trasera</string>
+    <string name="check_mic">Micrófono</string>
+    <string name="check_speaker">Bocina / Audio</string>
+    <string name="check_port">Puerto de carga</string>
+    <string name="check_buttons">Botones de encendido / volumen</string>
+    <string name="check_wireless">Wi-Fi y Bluetooth</string>
+    <string name="check_biometrics">Huella / Face ID</string>
+    <string name="check_housing">Carcasa y golpes</string>
+    <string name="check_sim">SIM y red celular</string>
+    <string name="check_status_ok">OK</string>
+    <string name="check_status_issue">Falla</string>
+    <string name="check_status_na">N/A</string>
+
+    <!-- Job Details & Billing Settlement -->
+    <string name="job_details_title">Orden de reparación</string>
+    <string name="btn_update_stage">Cambiar estado</string>
+    <string name="btn_call_customer">Llamar</string>
+    <string name="btn_whatsapp">WhatsApp</string>
+    <string name="btn_record_payment">Liquidar saldo</string>
+    <string name="btn_share_slip">Compartir comprobante</string>
+    <string name="btn_print_receipt">Imprimir recibo</string>
+    <string name="dialog_settle_title">Registrar liquidación de pago</string>
+    <string name="label_final_charge">Cobro final total</string>
+    <string name="label_discount">Descuento aplicado</string>
+    <string name="label_payment_mode">Forma de pago</string>
+    <string name="label_mark_paid">Marcar saldo como pagado por completo</string>
+    <string name="btn_save_settlement">Guardar liquidación</string>
+    <string name="btn_delete_job">Eliminar orden</string>
+    <string name="confirm_delete_msg">¿Eliminar esta orden de reparación de la base de datos de forma permanente?</string>
+    <string name="btn_edit_job">Editar orden</string>
+    <string name="edit_job_title">Editar datos de la orden</string>
+    <string name="edit_job_card_subtitle">Actualiza los datos del cliente, equipo y reparación</string>
+    <string name="btn_save_changes">Guardar cambios</string>
+    <string name="job_updated_success">Orden actualizada correctamente</string>
+    <string name="job_deleted_success">Orden eliminada correctamente</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Perfil y políticas del taller</string>
+    <string name="label_shop_name">Nombre del negocio</string>
+    <string name="label_shop_tagline">Eslogan del taller</string>
+    <string name="label_shop_phone">Teléfono de contacto</string>
+    <string name="label_shop_whatsapp">Número de WhatsApp</string>
+    <string name="label_shop_address">Dirección del taller</string>
+    <string name="label_shop_currency">Símbolo de moneda</string>
+    <string name="label_shop_warranty">Garantía predeterminada (días)</string>
+    <string name="label_shop_terms">Términos y condiciones (recibo)</string>
+    <string name="btn_save_settings">Guardar perfil del taller</string>
+    <string name="empty_jobs_title">No se encontraron órdenes de reparación</string>
+    <string name="empty_jobs_desc">Toca + Nueva orden para registrar la recepción de un equipo.</string>
+
+    <!-- WhatsApp Communications & Actions -->
+    <string name="whatsapp_dialog_title">Enviar mensaje por WhatsApp</string>
+    <string name="whatsapp_dialog_desc">Revisa o personaliza el mensaje antes de enviarlo:</string>
+    <string name="whatsapp_dialog_send">Enviar por WhatsApp</string>
+    <string name="whatsapp_dialog_copy">Copiar mensaje</string>
+    <string name="whatsapp_copied_toast">Mensaje copiado al portapapeles</string>
+    <string name="whatsapp_direct_open">Abriendo WhatsApp…</string>
+    <string name="btn_cancel">Cancelar</string>
+
+    <!-- WhatsApp App Selection -->
+    <string name="label_whatsapp_app_preference">Aplicación de WhatsApp predeterminada</string>
+    <string name="whatsapp_app_pref_desc">Elige qué aplicación usar para escribir a los clientes</string>
+    <string name="whatsapp_app_auto">Preguntar cada vez (ambas apps)</string>
+    <string name="whatsapp_app_standard">WhatsApp Messenger</string>
+    <string name="whatsapp_app_business">WhatsApp Business</string>
+    <string name="whatsapp_open_regular">WhatsApp</string>
+    <string name="whatsapp_open_business">WA Business</string>
+    <string name="whatsapp_not_installed">La aplicación de WhatsApp seleccionada no está instalada en este teléfono</string>
+
+    <!-- Status Activity Logs -->
+    <string name="status_logs_title">Historial de estados</string>
+    <string name="status_last_updated">Última actualización</string>
+    <string name="status_logs_count">registros</string>
+    <string name="status_logs_empty">Aún no hay movimientos de estado</string>
+    <string name="status_log_note_optional">Nota u observaciones del estado (opcional)</string>
+    <string name="select_new_stage_label">Selecciona el nuevo estado</string>
+
+    <!-- Delivery & Handover Strings -->
+    <string name="dialog_delivery_title">Completar y entregar equipo</string>
+    <string name="handover_recipient_section_title">Quién recibe el equipo</string>
+    <string name="handover_original_customer">Cliente original (en persona)</string>
+    <string name="handover_other_person">Otra persona / representante</string>
+    <string name="handover_recipient_name">Nombre de quien recibe</string>
+    <string name="handover_recipient_phone">Celular de quien recibe</string>
+    <string name="handover_name_required_error">Escribe el nombre de quien recibe</string>
+    <string name="handover_phone_required_error">Escribe el celular de quien recibe</string>
+    <string name="handover_delivery_note">Nota de entrega / observaciones (opcional)</string>
+    <string name="btn_confirm_delivery">Completar y entregar</string>
+    <string name="card_handover_details_title">Registro de entrega</string>
+    <string name="handover_delivered_on">Entregado el</string>
+    <string name="handover_delivered_to">Recogido por</string>
+    <string name="handover_recipient_contact">Teléfono de quien recibe</string>
+    <string name="handover_by_self">Cliente original</string>
+    <string name="handover_by_other">Representante / otra persona</string>
+    <string name="job_delivered_success">Equipo entregado y registrado correctamente</string>
+
+    <!-- Receipt Direct WhatsApp Sharing -->
+    <string name="receipt_share_dialog_title">Enviar recibo al cliente</string>
+    <string name="receipt_share_dialog_subtitle">Envía el comprobante oficial directo al celular del cliente</string>
+    <string name="btn_share_whatsapp">WhatsApp</string>
+    <string name="btn_share_w4b">WA Business</string>
+    <string name="btn_share_other_print">Imprimir / Otra app</string>
+    <string name="receipt_sent_toast">Abriendo WhatsApp con el comprobante en PDF…</string>
+    <string name="pdf_generating_toast">Preparando comprobante en PDF…</string>
+    <string name="pdf_generate_error">No se pudo generar el comprobante en PDF</string>
+
+    <!-- Input Validation Errors -->
+    <string name="error_invalid_amount">Escribe un monto válido, no negativo</string>
+    <string name="error_edit_required_fields">Nombre del cliente, teléfono, marca, modelo y falla son obligatorios</string>
+    <string name="error_invalid_warranty">Los días de garantía deben ser un número positivo (1 o más)</string>
+
+    <!-- Google Sheets Cloud Sync -->
+    <string name="section_sheets_sync">Sincronización con Google Sheets (tu Drive)</string>
+    <string name="sheets_sync_desc">Guarda y sincroniza todas las órdenes y los ajustes del taller en una hoja de cálculo de tu propio Google Drive (MobileRepairShop_DB). Sin servidores externos.</string>
+    <string name="sheets_status_connected">Conectado</string>
+    <string name="sheets_status_disconnected">No conectado</string>
+    <string name="sheets_last_synced">Última sincronización: %1$s</string>
+    <string name="sheets_never_synced">Aún no sincronizado</string>
+    <string name="sheets_sheet_id_label">ID de la hoja: %1$s</string>
+    <string name="btn_connect_google_sheets">Conectar cuenta de Google y sincronizar</string>
+    <string name="btn_sync_now">Sincronizar ahora</string>
+    <string name="btn_syncing">Sincronizando…</string>
+    <string name="btn_open_google_sheet">Abrir en Google Sheets</string>
+    <string name="btn_disconnect_sheets">Desconectar</string>
+    <string name="label_custom_sheet_id">Vincular URL o ID de una hoja existente (opcional)</string>
+    <string name="btn_link_sheet_id">Vincular y sincronizar</string>
+    <string name="sheets_sync_success">¡Sincronizado! Se recibieron %1$d y se enviaron %2$d registros</string>
+    <string name="sheets_sync_failed">Falló la sincronización: %1$s</string>
+    <string name="sheets_disconnected_toast">Sincronización con Google Sheets desconectada</string>
+
+    <!-- Settings Hub & Dedicated Sync Manager Page -->
+    <string name="settings_hub_title">Ajustes</string>
+    <string name="settings_hub_shop_profile_title">Perfil y políticas del taller</string>
+    <string name="settings_hub_shop_profile_desc">Nombre del taller, teléfonos, moneda, garantía, términos del recibo y app de WhatsApp</string>
+    <string name="settings_hub_sync_title">Administrador de sincronización con Google Sheets</string>
+    <string name="settings_hub_sync_desc">Conecta tu hoja privada de Google Drive, sincroniza las órdenes automáticamente y consúltalas en tu computadora</string>
+    <string name="sync_manager_title">Administrador de sincronización</string>
+    <string name="sync_setup_guide_title">Identidad de la app y lista de OAuth</string>
+    <string name="sync_package_name_label">Nombre del paquete: %1$s</string>
+    <string name="sync_setup_checklist">Si Google Auth muestra el error 8 o 10: registra un cliente OAuth de Android en Google Cloud Console con este nombre de paquete y su SHA-1, habilita las APIs de Google Sheets y Drive, y agrega tu Gmail en Usuarios de prueba de OAuth.</string>
+    <string name="btn_copy_package">Copiar nombre del paquete</string>
+    <string name="toast_package_copied">Nombre del paquete copiado al portapapeles</string>
+
+    <!-- Google Drive Folder & Nightly Mobile Backup -->
+    <string name="sync_folder_label">Carpeta de Drive: %1$s</string>
+    <string name="section_nightly_backup">Respaldo nocturno desde el celular</string>
+    <string name="nightly_backup_desc">Copia diaria a las 11:00 p. m., solo desde el celular, guardada en la carpeta \"Mobile Repair Shop\" de tu Google Drive.</string>
+    <string name="label_nightly_backup_toggle">Horario: todos los días a las 11:00 p. m. (solo celular)</string>
+    <string name="backup_last_run">Último respaldo: %1$s (%2$s)</string>
+    <string name="backup_never_run">Aún no se ha creado ningún respaldo</string>
+    <string name="btn_backup_now">Respaldar ahora</string>
+    <string name="btn_backing_up">Creando respaldo…</string>
+    <string name="backup_success_toast">Respaldo completo guardado: %1$s</string>
+    <string name="backup_failed_toast">Falló el respaldo: %1$s</string>
+
+    <!-- Custom Job Number Format & Monthly Reset -->
+    <string name="section_job_numbering">Formato del folio</string>
+    <string name="label_job_prefix">Prefijo inicial personalizado</string>
+    <string name="hint_job_prefix">Ej. ORD, MRS, TEC</string>
+    <string name="job_prefix_preview">Vista previa del siguiente folio: %1$s</string>
+    <string name="job_monthly_reset_note">Formato: (Prefijo)-aammdd-(001). El contador vuelve a 001 automáticamente al inicio de cada mes.</string>
+
+    <!-- Khata Book & Customer Autocomplete -->
+    <string name="khata_book_title">Libro de fiado</string>
+    <string name="khata_book_subtitle">Cuentas de clientes y adeudos pendientes</string>
+    <string name="khata_search_hint">Buscar por nombre o teléfono del cliente</string>
+    <string name="khata_filter_all">Todos los clientes</string>
+    <string name="khata_filter_dues">Con adeudo</string>
+    <string name="khata_total_dues_label">Total por cobrar</string>
+    <string name="khata_customers_with_dues">%1$d clientes con adeudo</string>
+    <string name="khata_visits_count">%1$d visitas</string>
+    <string name="khata_total_billed">Cobrado: %1$s</string>
+    <string name="khata_total_paid">Pagado: %1$s</string>
+    <string name="khata_due_badge">Debe: %1$s</string>
+    <string name="khata_settled_badge">Al corriente</string>
+    <string name="khata_empty_title">No se encontraron clientes</string>
+    <string name="khata_detail_title">Cuenta del cliente</string>
+    <string name="khata_receive_payment">Recibir pago</string>
+    <string name="khata_new_job_for_customer">Nueva orden</string>
+    <string name="khata_whatsapp_reminder">Recordar</string>
+    <string name="khata_job_history_header">Historial de reparaciones y pagos</string>
+    <string name="khata_payment_dialog_title">Recibir pago de la cuenta</string>
+    <string name="khata_payment_amount_label">Monto recibido</string>
+    <string name="khata_payment_note_label">Nota (opcional)</string>
+    <string name="khata_payment_success">Pago registrado en %1$d orden(es)</string>
+    <string name="khata_payment_invalid">Escribe un monto de pago válido</string>
+    <string name="khata_no_pending_dues">No hay adeudos pendientes por liquidar</string>
+    <string name="khata_repeat_suggestions_title">Clientes existentes (toca para autocompletar)</string>
+    <string name="khata_prior_due_warning">Adeudo anterior: %1$s (%2$d orden(es) sin pagar)</string>
+
+    <!-- Appearance & Theme Mode -->
+    <string name="settings_theme_title">Apariencia (tema)</string>
+    <string name="settings_theme_desc">Elige entre el tema del sistema, modo claro o modo oscuro</string>
+    <string name="theme_mode_system">Sistema</string>
+    <string name="theme_mode_light">Claro</string>
+    <string name="theme_mode_dark">Oscuro</string>
+
+    <!-- Notifications & Channels -->
+    <string name="settings_notifications_title">Notificaciones</string>
+    <string name="settings_notifications_desc">Recibe avisos de órdenes nuevas, equipos listos para recoger y respaldos de Drive</string>
+    <string name="btn_allow_notifications">Permitir notificaciones</string>
+    <string name="btn_send_test_notification">Enviar notificación de prueba</string>
+    <string name="notif_test_sent_toast">Notificación de prueba enviada</string>
+    <string name="notif_permission_denied_toast">No se otorgó el permiso de notificaciones</string>
+    <string name="notif_channel_repairs_name">Avances de reparaciones</string>
+    <string name="notif_channel_repairs_desc">Avisos cuando se crea una orden o cambia de estado</string>
+    <string name="notif_channel_backup_name">Respaldo y sincronización en la nube</string>
+    <string name="notif_channel_backup_desc">Avisos del respaldo nocturno en Google Drive</string>
+    <string name="notif_job_created_title">Nueva orden: #%1$s</string>
+    <string name="notif_job_created_body">%1$s • %2$s registrado para reparación</string>
+    <string name="notif_ready_pickup_title">Listo para recoger: #%1$s</string>
+    <string name="notif_stage_updated_title">Orden #%1$s • %2$s</string>
+    <string name="notif_stage_updated_body">%1$s (%2$s) cambió a %3$s</string>
+    <string name="notif_backup_success_title">Respaldo nocturno en Google Drive completado</string>
+    <string name="notif_backup_failed_title">Falló el respaldo nocturno en Google Drive</string>
+    <string name="notif_test_title">Notificaciones activas</string>
+    <string name="notif_test_body">Recibirás avisos de avances de reparación y respaldos.</string>
+
+    <!-- GitHub App Update Checker -->
+    <string name="settings_github_update_title">Actualizaciones de la app (GitHub)</string>
+    <string name="settings_github_update_desc">Revisa los Releases de GitHub para ver si hay una versión más nueva</string>
+    <string name="settings_current_version_badge">v%1$s</string>
+    <string name="label_github_repo">Repositorio de GitHub (usuario/repo)</string>
+    <string name="placeholder_github_repo">Ej. usuario/mobile-repair-shop</string>
+    <string name="btn_check_updates">Buscar actualizaciones</string>
+    <string name="btn_checking_updates">Consultando GitHub…</string>
+    <string name="btn_open_release_download">Abrir release / descargar APK</string>
+    <string name="update_status_checking">Obteniendo la última versión de GitHub…</string>
+    <string name="update_available_title">Nueva versión disponible: v%1$s</string>
+    <string name="update_status_uptodate">Tienes la versión más reciente (v%1$s)</string>
+    <string name="update_status_no_releases">No se encontró ninguna versión publicada para %1$s</string>
+    <string name="update_status_invalid_repo">Escribe un repositorio de GitHub válido, como usuario/repo o https://github.com/usuario/repo</string>
+    <string name="update_status_error">Falló la búsqueda de actualizaciones: %1$s</string>
+    <string name="notif_update_available_title">Actualización disponible: v%1$s</string>
+    <string name="notif_update_available_body">Toca para ver o descargar la última versión en GitHub.</string>
+    <string name="dialog_update_available_title">Nueva actualización disponible</string>
+    <string name="dialog_update_available_body">La versión v%1$s ya está disponible en GitHub (actual: v%2$s). Actualiza ahora o más tarde desde Ajustes.</string>
+    <string name="btn_update_now">Actualizar ahora</string>
+    <string name="btn_update_later">Más tarde</string>
+    <string name="banner_update_available_title">Actualización disponible</string>
+    <string name="banner_update_available_subtitle">La nueva versión v%1$s está lista (actual: v%2$s)</string>
+    <string name="cd_dismiss_update_banner">Cerrar aviso de actualización</string>
+</resources>

@@ -31,6 +31,7 @@ import com.example.data.remote.GoogleSheetsSyncManager
 import com.example.data.remote.GoogleSyncConfig
 import com.example.data.remote.SyncSummary
 import com.example.data.remote.VersionCheckService
+import com.example.util.LanguageManager
 import com.example.util.ReceiptPdfGenerator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -49,11 +50,16 @@ import java.util.Date
 import java.util.Locale
 
 class ShopRepository(
+    private val appContext: Context,
     private val database: AppDatabase,
     private val syncManager: GoogleSheetsSyncManager? = null
 ) {
 
     private val syncScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+
+    /** Text in the language chosen in Settings. */
+    private fun tr(@androidx.annotation.StringRes id: Int, vararg args: Any): String =
+        LanguageManager.getString(appContext, id, *args)
 
     private val jobCardDao = database.jobCardDao()
     private val inventoryDao = database.inventoryDao()
@@ -188,7 +194,7 @@ class ShopRepository(
                     com.example.data.model.StatusLogEntry(
                         stage = RepairStage.DIAGNOSTIC,
                         timestamp = now,
-                        note = "Job intake registered"
+                        note = tr(R.string.log_job_intake)
                     )
                 )
             ),
@@ -247,15 +253,23 @@ class ShopRepository(
         val effectiveTotal = if (finalCost > 0.0) finalCost else existing.estimatedCost
         val netCollectedOrDue = (effectiveTotal - discount - existing.advancePaid).coerceAtLeast(0.0)
         val recipientLabel = if (pickedUpByOriginalCustomer) {
-            "${existing.customerName} (Customer)"
+            tr(R.string.log_customer_suffix, existing.customerName)
         } else {
-            "${recipientName.trim()} (Phone: ${recipientPhone.trim()})"
+            tr(R.string.log_recipient, recipientName.trim(), recipientPhone.trim())
         }
-        val paymentStatusLabel = if (isPaid) "Paid via $paymentMode" else "Payment Due"
+        val paymentStatusLabel = if (isPaid) tr(R.string.log_paid_via, paymentMode) else tr(R.string.log_payment_due)
         val logDetails = buildString {
-            append("Handed over to: $recipientLabel • Final: $currency${String.format(java.util.Locale.US, "%.2f", effectiveTotal)} • Net: $currency${String.format(java.util.Locale.US, "%.2f", netCollectedOrDue)} ($paymentStatusLabel)")
+            append(
+                tr(
+                    R.string.log_handover,
+                    recipientLabel,
+                    "$currency${String.format(java.util.Locale.US, "%.2f", effectiveTotal)}",
+                    "$currency${String.format(java.util.Locale.US, "%.2f", netCollectedOrDue)}",
+                    paymentStatusLabel
+                )
+            )
             if (deliveryNote.isNotBlank()) {
-                append(" • Note: ${deliveryNote.trim()}")
+                append(" • ").append(tr(R.string.log_handover_note, deliveryNote.trim()))
             }
         }
 
@@ -545,7 +559,7 @@ class ShopRepository(
                     putExtra(Intent.EXTRA_TEXT, customMessage)
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 }
-                val chooser = Intent.createChooser(shareIntent, "Send via WhatsApp / Message").apply {
+                val chooser = Intent.createChooser(shareIntent, tr(R.string.wa_chooser_send)).apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 }
                 context.startActivity(chooser)
@@ -563,70 +577,28 @@ class ShopRepository(
         val advance = String.format("%.2f", job.advancePaid)
         val est = String.format("%.2f", job.estimatedCost)
 
+        val device = "${job.deviceBrand} ${job.deviceModel}"
         return when (job.stage) {
-            RepairStage.DIAGNOSTIC -> """
-                *${shopName}* - Job Intake Confirmation
-                
-                Hello *${job.customerName}*,
-                Your device *${job.deviceBrand} ${job.deviceModel}* has been booked for diagnosis.
-                
-                📋 *Job Card:* #${job.jobNumber}
-                🔧 *Reported Issue:* ${job.issueDescription}
-                💵 *Estimated Cost:* $currency$est
-                💰 *Advance Paid:* $currency$advance
-                
-                We will update you as soon as our workbench diagnosis is completed.
-                WhatsApp / Support: $shopContact
-                Thank you for choosing ${shopName}!
-            """.trimIndent()
-
-            RepairStage.WAITING_FOR_PARTS -> """
-                *${shopName}* - Repair Update
-                
-                Hello *${job.customerName}*,
-                Update on your *${job.deviceBrand} ${job.deviceModel}* (Job: #${job.jobNumber}).
-                We have ordered genuine replacement parts and will resume repair as soon as stock arrives.
-                
-                Contact us: $shopContact
-            """.trimIndent()
-
-            RepairStage.IN_PROGRESS -> """
-                *${shopName}* - Repair In Progress
-                
-                Hello *${job.customerName}*,
-                Our technician is currently working on your *${job.deviceBrand} ${job.deviceModel}* (Job: #${job.jobNumber}).
-                Quality testing is underway!
-            """.trimIndent()
-
-            RepairStage.READY_FOR_PICKUP -> """
-                *${shopName}* - Device Ready for Pickup! 📱✅
-                
-                Hello *${job.customerName}*,
-                Good news! Your *${job.deviceBrand} ${job.deviceModel}* (Job: #${job.jobNumber}) is fully repaired, tested, and ready for pickup.
-                
-                💰 *Balance Due:* $currency$due
-                📍 *Pickup Location:* ${profile.address}
-                
-                Please present this message or job number upon arrival.
-            """.trimIndent()
-
-            RepairStage.DELIVERED -> """
-                *${shopName}* - Thank You!
-                
-                Hello *${job.customerName}*,
-                Your *${job.deviceBrand} ${job.deviceModel}* has been handed over.
-                🛡️ Replaced parts include our *${profile.warrantyDays}-day warranty*.
-                
-                Need help? Call / WhatsApp $shopContact. Have a wonderful day!
-            """.trimIndent()
-
-            RepairStage.CANCELLED -> """
-                *${shopName}* - Job Notice
-                
-                Hello *${job.customerName}*,
-                Repair for your *${job.deviceBrand} ${job.deviceModel}* (Job: #${job.jobNumber}) has been cancelled.
-                Please collect your device from our counter at your convenience.
-            """.trimIndent()
+            RepairStage.DIAGNOSTIC -> tr(
+                R.string.wa_intake, shopName, job.customerName, device, job.jobNumber,
+                job.issueDescription, "$currency$est", "$currency$advance", shopContact
+            )
+            RepairStage.WAITING_FOR_PARTS -> tr(
+                R.string.wa_waiting_parts, shopName, job.customerName, device, job.jobNumber, shopContact
+            )
+            RepairStage.IN_PROGRESS -> tr(
+                R.string.wa_in_progress, shopName, job.customerName, device, job.jobNumber
+            )
+            RepairStage.READY_FOR_PICKUP -> tr(
+                R.string.wa_ready, shopName, job.customerName, device, job.jobNumber,
+                "$currency$due", profile.address
+            )
+            RepairStage.DELIVERED -> tr(
+                R.string.wa_delivered, shopName, job.customerName, device, profile.warrantyDays, shopContact
+            )
+            RepairStage.CANCELLED -> tr(
+                R.string.wa_cancelled, shopName, job.customerName, device, job.jobNumber
+            )
         }
     }
 
@@ -642,28 +614,15 @@ class ShopRepository(
         val dueFormatted = String.format(Locale.US, "%.2f", summary.totalPendingDue)
 
         return if (summary.totalPendingDue > 0.01) {
-            """
-            *${shopName}* - Khata / Payment Reminder
-
-            Hello *${summary.customerName}*,
-            This is a polite reminder regarding your repair account balance:
-
-            $pendingJobsLines
-
-            💰 *Total Pending Balance:* $currency$dueFormatted
-            📞 *Shop Contact:* $shopContact
-
-            Please let us know once paid. Thank you for visiting ${shopName}!
-            """.trimIndent()
+            tr(
+                R.string.wa_khata_due, shopName, summary.customerName, pendingJobsLines,
+                "$currency$dueFormatted", shopContact
+            )
         } else {
-            """
-            *${shopName}* - Account Settled ✅
-
-            Hello *${summary.customerName}*,
-            Your repair Khata account with *${shopName}* has ₹0.00 pending balance across ${summary.totalJobsCount} visit(s).
-
-            Thank you for choosing ${shopName}!
-            """.trimIndent()
+            tr(
+                R.string.wa_khata_settled, shopName, summary.customerName,
+                summary.totalJobsCount, "${currency}0.00"
+            )
         }
     }
 
@@ -683,47 +642,47 @@ class ShopRepository(
         val fin = String.format("%.2f", job.finalCost)
         val cur = profile.currencySymbol
         val waLine = if (profile.whatsappNumber.isNotBlank() && profile.whatsappNumber != profile.contactPhone) {
-            "\n💬 WA: ${profile.whatsappNumber}"
+            "\n💬 ${tr(R.string.rt_wa)}: ${profile.whatsappNumber}"
         } else ""
 
         val deliveryInfo = if (job.stage == RepairStage.DELIVERED && job.deliveredAt != null) {
             val recipient = if (!job.pickedUpByOriginalCustomer && job.recipientName.isNotBlank()) {
                 "${job.recipientName} (${job.recipientPhone})"
             } else {
-                "${job.customerName} (Self)"
+                "${job.customerName} (${tr(R.string.rt_self)})"
             }
-            "\n*PICKED UP BY:* $recipient"
+            "\n*${tr(R.string.rt_picked_up_by)}:* $recipient"
         } else ""
 
         return """
             ==============================
             *${profile.shopName.uppercase()}*
             ${profile.tagline}
-            📞 Tel: ${profile.contactPhone}$waLine
+            📞 ${tr(R.string.rt_tel)}: ${profile.contactPhone}$waLine
             📍 ${profile.address}
             ==============================
-            📋 *REPAIR JOB CARD: #${job.jobNumber}*
-            📅 Date: $createdDate
+            📋 *${tr(R.string.rt_job_card, job.jobNumber)}*
+            📅 ${tr(R.string.rt_date)}: $createdDate
             ------------------------------
-            👤 *CUSTOMER:* ${job.customerName}
-            📱 *PHONE:* ${job.customerPhone}
-            🛠️ *DEVICE:* ${job.deviceBrand} ${job.deviceModel}
-            🎨 *COLOR:* ${job.deviceColor.ifBlank { "N/A" }}
-            🔢 *IMEI/SN:* ${job.imeiOrSerial.ifBlank { "N/A" }}
+            👤 *${tr(R.string.rt_customer)}:* ${job.customerName}
+            📱 *${tr(R.string.rt_phone)}:* ${job.customerPhone}
+            🛠️ *${tr(R.string.rt_device)}:* ${job.deviceBrand} ${job.deviceModel}
+            🎨 *${tr(R.string.rt_color)}:* ${job.deviceColor.ifBlank { tr(R.string.rt_na) }}
+            🔢 *${tr(R.string.rt_imei)}:* ${job.imeiOrSerial.ifBlank { tr(R.string.rt_na) }}
             ------------------------------
-            ⚠️ *REPORTED ISSUE:*
+            ⚠️ *${tr(R.string.rt_reported_issue)}:*
             ${job.issueDescription}
             ------------------------------
-            📊 *STATUS:* ${job.stage.title}
-            💰 *ESTIMATED:* $cur$est
-            💵 *ADVANCE PAID:* $cur$adv
-            ${if (job.finalCost > 0.0) "🏷️ *FINAL COST:* $cur$fin\n" else ""}⚖️ *BALANCE DUE:* $cur$bal
-            💳 *PAYMENT:* ${if (job.isPaid) "PAID IN FULL (${job.paymentMode})" else "BALANCE PENDING"}$deliveryInfo
+            📊 *${tr(R.string.rt_status)}:* ${tr(com.example.util.Labels.stageRes(job.stage))}
+            💰 *${tr(R.string.rt_estimated)}:* $cur$est
+            💵 *${tr(R.string.rt_advance)}:* $cur$adv
+            ${if (job.finalCost > 0.0) "🏷️ *${tr(R.string.rt_final)}:* $cur$fin\n" else ""}⚖️ *${tr(R.string.rt_balance_due)}:* $cur$bal
+            💳 *${tr(R.string.rt_payment)}:* ${if (job.isPaid) tr(R.string.rt_paid_full, job.paymentMode) else tr(R.string.rt_balance_pending)}$deliveryInfo
             ==============================
-            📜 *TERMS & CONDITIONS:*
+            📜 *${tr(R.string.rt_terms)}:*
             ${profile.termsAndConditions}
             ==============================
-            _Thank you for choosing ${profile.shopName}!_
+            _${tr(R.string.rt_thanks, profile.shopName)}_
         """.trimIndent()
     }
 
@@ -755,10 +714,11 @@ class ShopRepository(
 
     private fun formatWhatsAppPhoneDigits(rawPhone: String): String {
         val cleanDigits = rawPhone.filter { it.isDigit() }
+        val cc = LanguageManager.getCountryCode(appContext)
+        if (cc.isEmpty()) return cleanDigits
         return when {
-            cleanDigits.startsWith("91") && cleanDigits.length == 12 -> cleanDigits
-            cleanDigits.startsWith("0") && cleanDigits.length == 11 -> "91${cleanDigits.drop(1)}"
-            cleanDigits.length == 10 -> "91$cleanDigits"
+            cleanDigits.length == 10 -> "$cc$cleanDigits"
+            cleanDigits.startsWith("0") && cleanDigits.length == 11 -> "$cc${cleanDigits.drop(1)}"
             else -> cleanDigits
         }
     }
@@ -771,8 +731,10 @@ class ShopRepository(
         targetPackage: String? = null
     ): Boolean {
         val formattedPhone = formatWhatsAppPhoneDigits(job.customerPhone)
-        val caption = "*${profile.shopName}* - Job Card Receipt #${job.jobNumber}\n" +
-            "Customer: ${job.customerName} | Device: ${job.deviceBrand} ${job.deviceModel}"
+        val caption = tr(
+            R.string.wa_receipt_caption, profile.shopName, job.jobNumber,
+            job.customerName, "${job.deviceBrand} ${job.deviceModel}"
+        )
 
         fun buildSendIntent(pkg: String?): Intent {
             return Intent(Intent.ACTION_SEND).apply {
@@ -852,7 +814,7 @@ class ShopRepository(
                 putExtra(Intent.EXTRA_SUBJECT, "Repair Job Card #${job.jobNumber}")
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
-            val chooser = Intent.createChooser(sendIntent, "Share Job Card PDF").apply {
+            val chooser = Intent.createChooser(sendIntent, tr(R.string.wa_chooser_share_pdf)).apply {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
             context.startActivity(chooser)
@@ -926,8 +888,9 @@ class ShopRepository(
     suspend fun seedInitialDataIfEmpty() = withContext(Dispatchers.IO) {
         val existingProfile = shopProfileDao.getShopProfileSync()
         if (existingProfile != null) {
-            if (existingProfile.currencySymbol == "$" || existingProfile.currencySymbol.isBlank()) {
-                shopProfileDao.updateProfile(existingProfile.copy(currencySymbol = "₹"))
+            // Keep the currency the user chose. Only fill it in when it is empty.
+            if (existingProfile.currencySymbol.isBlank()) {
+                shopProfileDao.updateProfile(existingProfile.copy(currencySymbol = "$"))
             }
             return@withContext
         }

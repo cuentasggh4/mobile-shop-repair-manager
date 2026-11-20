@@ -348,7 +348,7 @@ fun ShopSettingsScreen(
                                 preferredWhatsAppPackage = preferredWhatsAppPackage
                             )
                             viewModel.updateShopProfile(updated) {
-                                Toast.makeText(context, "Settings saved", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, context.getString(R.string.toast_settings_saved), Toast.LENGTH_SHORT).show()
                                 viewModel.navigateBack()
                             }
                         },
