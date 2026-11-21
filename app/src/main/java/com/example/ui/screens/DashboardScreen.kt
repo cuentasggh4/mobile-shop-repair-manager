@@ -169,7 +169,7 @@ fun DashboardScreen(
                         ) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = "Close search",
+                                contentDescription = stringResource(R.string.cd_close_search),
                                 tint = shopColors.topBarContent
                             )
                         }
@@ -585,7 +585,7 @@ private fun M3JobItemCard(
                     fontFamily = FontFamily.Monospace
                 )
                 Text(
-                    text = "• ${formatRelativeTime(job.updatedAt)}",
+                    text = "• ${formatRelativeTime(job.updatedAt, stringResource(R.string.time_just_now))}",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -784,11 +784,11 @@ private fun UpdateAvailableBanner(
     }
 }
 
-private fun formatRelativeTime(timestamp: Long): String {
+private fun formatRelativeTime(timestamp: Long, justNow: String): String {
     val diff = System.currentTimeMillis() - timestamp
     val hours = diff / (1000 * 60 * 60)
     return when {
-        hours < 1 -> "Just now"
+        hours < 1 -> justNow
         hours < 24 -> "${hours}h"
         else -> SimpleDateFormat("dd MMM", Locale.getDefault()).format(Date(timestamp))
     }

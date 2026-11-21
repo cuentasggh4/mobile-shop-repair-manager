@@ -6,12 +6,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.R
 import com.example.data.database.AppDatabase
 import com.example.data.entity.CashMovementEntity
 import com.example.data.entity.InventoryPartEntity
 import com.example.data.entity.SaleEntity
 import com.example.data.entity.SupplierEntity
 import com.example.data.repository.CartLine
+import com.example.data.repository.NotEnoughStockException
+import com.example.util.LanguageManager
 import com.example.data.repository.PeriodSummary
 import com.example.data.repository.ReportPeriod
 import com.example.data.repository.StoreRepository
@@ -125,7 +128,7 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
         val existing = cart.find { it.partId == part.id }
         if (existing == null) {
             if (part.quantityInStock <= 0) {
-                _message.value = "Out of stock: ${part.partName}"
+                _message.value = LanguageManager.getString(getApplication<Application>(), R.string.msg_out_of_stock, part.partName)
                 return
             }
             cart = cart + CartLine(
@@ -159,7 +162,7 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
             return
         }
         if (newQty > line.maxStock) {
-            _message.value = "Only ${line.maxStock} in stock: ${line.name}"
+            _message.value = LanguageManager.getString(getApplication<Application>(), R.string.msg_only_in_stock, line.maxStock, line.name)
             return
         }
         cart = cart.map { if (it === line) it.copy(quantity = newQty) else it }
@@ -263,7 +266,12 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
             try {
                 block()
             } catch (e: Exception) {
-                _message.value = e.message ?: "Something went wrong"
+                val app = getApplication<Application>()
+                _message.value = when {
+                    e is NotEnoughStockException && e.itemName != null ->
+                        LanguageManager.getString(app, R.string.msg_not_enough_stock, e.itemName)
+                    else -> e.message ?: LanguageManager.getString(app, R.string.msg_generic_error)
+                }
             }
         }
     }

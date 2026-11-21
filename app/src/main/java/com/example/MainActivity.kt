@@ -69,6 +69,11 @@ class MainActivity : ComponentActivity() {
 
     private var pendingNotificationJobId: Long = -1L
 
+    // Apply the language chosen in Settings (Spanish by default).
+    override fun attachBaseContext(newBase: android.content.Context) {
+        super.attachBaseContext(com.example.util.LanguageManager.wrap(newBase))
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

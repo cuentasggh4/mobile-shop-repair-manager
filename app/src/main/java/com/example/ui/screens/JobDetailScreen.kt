@@ -576,10 +576,10 @@ fun JobDetailScreen(
 
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
                             AppButton(
-                                text = "Save Notes",
+                                text = stringResource(R.string.btn_save_notes),
                                 onClick = {
                                     viewModel.updateTechnicianNotes(techNotesText)
-                                    Toast.makeText(context, "Notes saved", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(context, context.getString(R.string.toast_notes_saved), Toast.LENGTH_SHORT).show()
                                 },
                                 testTag = "save_notes_btn"
                             )
@@ -803,7 +803,7 @@ fun JobDetailScreen(
                             }
                         }
                         viewModel.recordPayment(finalCostNum, discountNum, editIsPaid, editPaymentMode)
-                        Toast.makeText(context, "Settlement recorded", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, context.getString(R.string.toast_settlement_recorded), Toast.LENGTH_SHORT).show()
                     },
                     modifier = Modifier.testTag("confirm_settle_btn")
                 ) {
@@ -812,7 +812,7 @@ fun JobDetailScreen(
             },
             dismissButton = {
                 TextButton(onClick = { viewModel.showPaymentDialog = false }) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.btn_cancel))
                 }
             }
         )

@@ -225,7 +225,7 @@ class StoreRepository(private val db: AppDatabase) {
             val appliedDiscount = discount.coerceIn(0.0, subtotal)
             lines.filter { it.partId > 0L }.forEach { line ->
                 val updated = store.deductStockSafe(line.partId, line.quantity, now)
-                if (updated == 0) throw IllegalStateException("Not enough stock: ${line.name}")
+                if (updated == 0) throw NotEnoughStockException(line.name)
             }
             val saleId = store.insertSale(
                 SaleEntity(
@@ -283,7 +283,7 @@ class StoreRepository(private val db: AppDatabase) {
             val job = jobs.getJobByIdSync(jobId) ?: throw IllegalStateException("Job not found")
             val now = System.currentTimeMillis()
             val updated = store.deductStockSafe(partId, quantity, now)
-            if (updated == 0) throw IllegalStateException("Not enough stock")
+            if (updated == 0) throw NotEnoughStockException(null)
             val newIds = List(quantity) { partId.toString() }
             val merged = (job.linkedPartIdsCsv.split(",").map { it.trim() }.filter { it.isNotEmpty() } + newIds)
                 .joinToString(",")
@@ -303,3 +303,6 @@ class StoreRepository(private val db: AppDatabase) {
         }
     }
 }
+
+/** Thrown when a stock deduction fails; the UI turns it into a translated message. */
+class NotEnoughStockException(val itemName: String?) : IllegalStateException("Not enough stock")

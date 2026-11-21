@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <!-- Language selector -->
+    <string name="lang_title">Language</string>
+    <string name="lang_desc">Choose the language of the app. The messages sent to customers use it too.</string>
+    <string name="lang_country_code_label">WhatsApp country code</string>
+    <string name="lang_country_code_hint">Added to customer numbers that have no country code (e.g. 52 for Mexico, 1 for USA, 91 for India).</string>
+
+    <string name="stage_ready_for_pickup">Ready for Pickup</string>
+
+    <string-array name="fault_tags">
+        <item>Broken Screen</item>
+        <item>No Display</item>
+        <item>Battery Drain</item>
+        <item>Charging Port</item>
+        <item>Water Damage</item>
+        <item>Camera Blur</item>
+        <item>No Sound/Mic</item>
+        <item>Broken Back</item>
+        <item>Dead / No Power</item>
+        <item>Bootloop/Software</item>
+    </string-array>
+
+    <!-- Toasts and small labels -->
+    <string name="toast_job_created">Job Card created</string>
+    <string name="toast_settings_saved">Settings saved</string>
+    <string name="toast_notes_saved">Notes saved</string>
+    <string name="toast_settlement_recorded">Settlement recorded</string>
+    <string name="btn_save_notes">Save Notes</string>
+    <string name="label_no_phone">No phone</string>
+    <string name="time_just_now">Just now</string>
+    <string name="cd_close_search">Close search</string>
+
+    <!-- Form validation -->
+    <string name="err_customer_name_required">Customer Name is required</string>
+    <string name="err_customer_phone_required">Customer Phone number is required</string>
+    <string name="err_device_model_required">Device Model is required</string>
+    <string name="err_fault_required">Fault complaint description is required</string>
+
+    <!-- Receipt (preview screen and PDF) -->
+    <string name="rc_receipt_title">JOB CARD RECEIPT</string>
+    <string name="rc_customer">Customer</string>
+    <string name="rc_phone">Phone</string>
+    <string name="rc_device">Device</string>
+    <string name="rc_color">Color</string>
+    <string name="rc_imei">IMEI / SN</string>
+    <string name="rc_status">Status</string>
+    <string name="rc_reported_problem">REPORTED PROBLEM / COMPLAINT</string>
+    <string name="rc_no_issue">No issue description provided</string>
+    <string name="rc_billing_summary">BILLING &amp; PAYMENT SUMMARY</string>
+    <string name="rc_estimate_charge">Repair Estimate / Final Charge</string>
+    <string name="rc_advance_paid">Advance Paid</string>
+    <string name="rc_discount">Discount</string>
+    <string name="rc_paid_in_full">PAID IN FULL (%1$s)</string>
+    <string name="rc_net_balance_due">NET BALANCE DUE</string>
+    <string name="rc_delivery_record">DELIVERY &amp; HANDOVER RECORD</string>
+    <string name="rc_picked_up_by">Picked Up By</string>
+    <string name="rc_delivered_on">Delivered On</string>
+    <string name="rc_representative">Representative</string>
+    <string name="rc_original_customer">Original Customer</string>
+    <string name="rc_terms">TERMS &amp; CONDITIONS</string>
+    <string name="rc_customer_signature">Customer Signature</string>
+    <string name="rc_technician_signature">Technician Signature</string>
+    <string name="rc_continued">Cont.</string>
+    <string name="rc_page">Page %1$d</string>
+
+    <!-- WhatsApp messages sent to customers -->
+    <string name="wa_intake">*%1$s* - Job Intake Confirmation\n\nHello *%2$s*,\nYour device *%3$s* has been booked for diagnosis.\n\n📋 *Job Card:* #%4$s\n🔧 *Reported Issue:* %5$s\n💵 *Estimated Cost:* %6$s\n💰 *Advance Paid:* %7$s\n\nWe will update you as soon as our workbench diagnosis is completed.\nWhatsApp / Support: %8$s\nThank you for choosing %1$s!</string>
+    <string name="wa_waiting_parts">*%1$s* - Repair Update\n\nHello *%2$s*,\nUpdate on your *%3$s* (Job: #%4$s).\nWe have ordered genuine replacement parts and will resume repair as soon as stock arrives.\n\nContact us: %5$s</string>
+    <string name="wa_in_progress">*%1$s* - Repair In Progress\n\nHello *%2$s*,\nOur technician is currently working on your *%3$s* (Job: #%4$s).\nQuality testing is underway!</string>
+    <string name="wa_ready">*%1$s* - Device Ready for Pickup! 📱✅\n\nHello *%2$s*,\nGood news! Your *%3$s* (Job: #%4$s) is fully repaired, tested, and ready for pickup.\n\n💰 *Balance Due:* %5$s\n📍 *Pickup Location:* %6$s\n\nPlease present this message or job number upon arrival.</string>
+    <string name="wa_delivered">*%1$s* - Thank You!\n\nHello *%2$s*,\nYour *%3$s* has been handed over.\n🛡️ Replaced parts include our *%4$d-day warranty*.\n\nNeed help? Call / WhatsApp %5$s. Have a wonderful day!</string>
+    <string name="wa_cancelled">*%1$s* - Job Notice\n\nHello *%2$s*,\nRepair for your *%3$s* (Job: #%4$s) has been cancelled.\nPlease collect your device from our counter at your convenience.</string>
+    <string name="wa_khata_due">*%1$s* - Account / Payment Reminder\n\nHello *%2$s*,\nThis is a polite reminder regarding your repair account balance:\n\n%3$s\n\n💰 *Total Pending Balance:* %4$s\n📞 *Shop Contact:* %5$s\n\nPlease let us know once paid. Thank you for visiting %1$s!</string>
+    <string name="wa_khata_settled">*%1$s* - Account Settled ✅\n\nHello *%2$s*,\nYour repair account with *%1$s* has %4$s pending balance across %3$d visit(s).\n\nThank you for choosing %1$s!</string>
+    <string name="wa_receipt_caption">*%1$s* - Job Card Receipt #%2$s\nCustomer: %3$s | Device: %4$s</string>
+    <string name="wa_chooser_send">Send via WhatsApp / Message</string>
+    <string name="wa_chooser_share_pdf">Share Job Card PDF</string>
+    <string name="wa_clip_label">WhatsApp Repair Update</string>
+
+    <!-- Receipt text shared by message -->
+    <string name="rt_tel">Tel</string>
+    <string name="rt_wa">WA</string>
+    <string name="rt_job_card">REPAIR JOB CARD: #%1$s</string>
+    <string name="rt_date">Date</string>
+    <string name="rt_customer">CUSTOMER</string>
+    <string name="rt_phone">PHONE</string>
+    <string name="rt_device">DEVICE</string>
+    <string name="rt_color">COLOR</string>
+    <string name="rt_imei">IMEI/SN</string>
+    <string name="rt_reported_issue">REPORTED ISSUE</string>
+    <string name="rt_status">STATUS</string>
+    <string name="rt_estimated">ESTIMATED</string>
+    <string name="rt_advance">ADVANCE PAID</string>
+    <string name="rt_final">FINAL COST</string>
+    <string name="rt_balance_due">BALANCE DUE</string>
+    <string name="rt_payment">PAYMENT</string>
+    <string name="rt_paid_full">PAID IN FULL (%1$s)</string>
+    <string name="rt_balance_pending">BALANCE PENDING</string>
+    <string name="rt_picked_up_by">PICKED UP BY</string>
+    <string name="rt_self">Self</string>
+    <string name="rt_terms">TERMS &amp; CONDITIONS</string>
+    <string name="rt_thanks">Thank you for choosing %1$s!</string>
+    <string name="rt_na">N/A</string>
+
+    <!-- Status log notes written to the job history -->
+    <string name="log_job_intake">Job intake registered</string>
+    <string name="log_handover">Handed over to: %1$s • Final: %2$s • Net: %3$s (%4$s)</string>
+    <string name="log_handover_note">Note: %1$s</string>
+    <string name="log_customer_suffix">%1$s (Customer)</string>
+    <string name="log_recipient">%1$s (Phone: %2$s)</string>
+    <string name="log_paid_via">Paid via %1$s</string>
+    <string name="log_payment_due">Payment Due</string>
+
+    <!-- Store messages -->
+    <string name="msg_out_of_stock">Out of stock: %1$s</string>
+    <string name="msg_only_in_stock">Only %1$d in stock: %2$s</string>
+    <string name="msg_not_enough_stock">Not enough stock: %1$s</string>
+    <string name="msg_generic_error">Something went wrong</string>
+</resources>
