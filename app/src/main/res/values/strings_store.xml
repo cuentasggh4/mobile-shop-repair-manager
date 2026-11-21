@@ -84,7 +84,7 @@
     <string name="cash_void_title">Void this sale?</string>
     <string name="cash_void_body">The sale is deleted and its items go back to stock.</string>
     <string name="cash_void">Void sale</string>
-    <string name="cash_repairs_note">Repairs count when the job is marked as paid.</string>
+    <string name="cash_repairs_note">Advances and payments on repair orders are recorded here automatically.</string>
 
     <string name="rep_title">Reports</string>
     <string name="rep_today">Today</string>
@@ -114,4 +114,5 @@
     <string name="common_delete">Delete</string>
     <string name="common_add">Add</string>
     <string name="common_back">Back</string>
+    <string name="cash_repair_payment">Repair payment</string>
 </resources>

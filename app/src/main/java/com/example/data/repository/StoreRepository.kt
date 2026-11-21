@@ -89,6 +89,7 @@ fun buildPeriodSummary(
     jobs: List<JobCardEntity>,
     partsById: Map<Long, InventoryPartEntity>
 ): PeriodSummary {
+    val repairMovements = movements.filter { it.type == "REPAIR" }
     val paidJobs = jobs.filter { job ->
         val paidAt = job.deliveredAt ?: job.updatedAt
         job.isPaid && job.stage != RepairStage.CANCELLED && paidAt >= from && paidAt < to
@@ -99,14 +100,14 @@ fun buildPeriodSummary(
         val key = s.paymentMode.ifBlank { "Cash" }
         byMode[key] = (byMode[key] ?: 0.0) + s.total
     }
-    paidJobs.forEach { j ->
-        val key = j.paymentMode.ifBlank { "Cash" }
-        byMode[key] = (byMode[key] ?: 0.0) + repairRevenue(j)
+    repairMovements.forEach { m ->
+        val key = m.paymentMode.ifBlank { "Cash" }
+        byMode[key] = (byMode[key] ?: 0.0) + m.amount
     }
 
     val salesTotal = sales.sumOf { it.total }
     val salesCost = sales.sumOf { it.costTotal }
-    val repairsTotal = paidJobs.sumOf { repairRevenue(it) }
+    val repairsTotal = repairMovements.sumOf { it.amount }
     val repairPartsCost = paidJobs.sumOf { job ->
         job.linkedPartIdsCsv.split(",")
             .mapNotNull { it.trim().toLongOrNull() }
@@ -115,7 +116,7 @@ fun buildPeriodSummary(
     val cashIn = movements.filter { it.type == "IN" }.sumOf { it.amount }
     val expenses = movements.filter { it.type == "EXPENSE" }.sumOf { it.amount }
     val cashSales = sales.filter { isCash(it.paymentMode) }.sumOf { it.total }
-    val cashRepairs = paidJobs.filter { isCash(it.paymentMode) }.sumOf { repairRevenue(it) }
+    val cashRepairs = repairMovements.filter { isCash(it.paymentMode) }.sumOf { it.amount }
 
     val top = saleItems
         .groupBy { it.name }
@@ -133,7 +134,7 @@ fun buildPeriodSummary(
         salesCount = sales.size,
         salesTotal = salesTotal,
         salesCost = salesCost,
-        repairsCount = paidJobs.size,
+        repairsCount = repairMovements.filter { it.jobId > 0 }.map { it.jobId }.distinct().size,
         repairsTotal = repairsTotal,
         repairPartsCost = repairPartsCost,
         purchasesTotal = purchases.sumOf { it.unitCost * it.quantity },

@@ -199,8 +199,11 @@ fun CashRegisterScreen(
                         ) {
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
-                                    text = if (m.type == "IN") stringResource(R.string.cash_add_in)
-                                    else stringResource(R.string.cash_add_expense),
+                                    text = when (m.type) {
+                                        "IN" -> stringResource(R.string.cash_add_in)
+                                        "REPAIR" -> stringResource(R.string.cash_repair_payment)
+                                        else -> stringResource(R.string.cash_add_expense)
+                                    },
                                     style = MaterialTheme.typography.bodyMedium,
                                     fontWeight = FontWeight.SemiBold
                                 )
@@ -211,17 +214,19 @@ fun CashRegisterScreen(
                                 )
                             }
                             Text(
-                                text = (if (m.type == "IN") "+" else "−") + formatMoney(currency, m.amount),
+                                text = (if (m.type == "EXPENSE" || m.amount < 0) "−" else "+") + formatMoney(currency, kotlin.math.abs(m.amount)),
                                 style = MaterialTheme.typography.bodyMedium,
                                 fontWeight = FontWeight.Bold,
-                                color = if (m.type == "IN") colors.repaired else colors.alert
+                                color = if (m.type == "EXPENSE" || m.amount < 0) colors.alert else colors.repaired
                             )
-                            IconButton(onClick = { store.deleteMovement(m) }) {
-                                Icon(
-                                    Icons.Default.Delete,
-                                    contentDescription = stringResource(R.string.common_delete),
-                                    tint = colors.alert
-                                )
+                            if (m.type != "REPAIR") {
+                                IconButton(onClick = { store.deleteMovement(m) }) {
+                                    Icon(
+                                        Icons.Default.Delete,
+                                        contentDescription = stringResource(R.string.common_delete),
+                                        tint = colors.alert
+                                    )
+                                }
                             }
                         }
                     }
