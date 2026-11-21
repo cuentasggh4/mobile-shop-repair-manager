@@ -1,5 +1,6 @@
 # Mobile Repair Shop
 
+
 An offline-first **Mobile Repair Shop Manager** built with **Kotlin** and **Jetpack Compose (Material 3)**. Designed for daily repair counter workflows with job cards, a 12-point device intake checklist, Khata (credit/dues) ledger, PDF receipts, WhatsApp customer updates, Google Sheets/Drive backup, and built-in GitHub release update checking.
 
 ---
