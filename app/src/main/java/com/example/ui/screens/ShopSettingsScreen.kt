@@ -261,8 +261,8 @@ fun ShopSettingsScreen(
                             onValueChange = { terms = it },
                             label = stringResource(R.string.label_shop_terms),
                             singleLine = false,
-                            minLines = 4,
-                            maxLines = 8,
+                            minLines = 6,
+                            maxLines = 60,
                             modifier = Modifier.fillMaxWidth(),
                             testTag = "input_shop_terms"
                         )
