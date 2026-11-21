@@ -136,6 +136,28 @@ class ShopRepository(
         return "$cleanPrefix-$yymmdd-${String.format(Locale.US, "%03d", seq)}"
     }
 
+    private fun collectedOn(job: JobCardEntity?): Double =
+        when {
+            job == null -> 0.0
+            job.isPaid -> repairRevenue(job)
+            else -> job.advancePaid
+        }
+
+    /** Writes the change in money collected on a job (advance, payment, delivery) to the cash register. */
+    private suspend fun recordCashDelta(before: JobCardEntity?, after: JobCardEntity, mode: String) {
+        val delta = collectedOn(after) - collectedOn(before)
+        if (kotlin.math.abs(delta) < 0.005) return
+        database.storeDao().insertMovement(
+            com.example.data.entity.CashMovementEntity(
+                type = "REPAIR",
+                amount = delta,
+                note = "#${after.jobNumber}",
+                jobId = after.id,
+                paymentMode = mode.ifBlank { "Cash" }
+            )
+        )
+    }
+
     suspend fun createJob(
         customerName: String,
         customerPhone: String,
@@ -203,6 +225,7 @@ class ShopRepository(
         )
 
         val insertedId = jobCardDao.insertJob(job)
+        recordCashDelta(null, job.copy(id = insertedId), job.paymentMode)
         shopProfileDao.updateMonthlyJobSequence(
             nextSequence = seq + 1,
             monthKey = currentMonth,
@@ -295,6 +318,7 @@ class ShopRepository(
             updatedAt = now
         )
         jobCardDao.updateJob(updated)
+        recordCashDelta(existing, updated, paymentMode)
         scheduleBackgroundAutoSync()
     }
 
@@ -314,6 +338,7 @@ class ShopRepository(
             updatedAt = System.currentTimeMillis()
         )
         jobCardDao.updateJob(updated)
+        recordCashDelta(existing, updated, paymentMode)
         scheduleBackgroundAutoSync()
     }
 
@@ -368,6 +393,7 @@ class ShopRepository(
                 updatedAt = now
             )
             jobCardDao.updateJob(updatedJob)
+            recordCashDelta(job, updatedJob, paymentMode)
             remaining -= applied
             updatedCount++
         }
@@ -389,7 +415,10 @@ class ShopRepository(
     }
 
     suspend fun updateJobCard(job: JobCardEntity) = withContext(Dispatchers.IO) {
-        jobCardDao.updateJob(job.copy(updatedAt = System.currentTimeMillis()))
+        val before = jobCardDao.getJobByIdSync(job.id)
+        val after = job.copy(updatedAt = System.currentTimeMillis())
+        jobCardDao.updateJob(after)
+        recordCashDelta(before, after, after.paymentMode)
         scheduleBackgroundAutoSync()
     }
 

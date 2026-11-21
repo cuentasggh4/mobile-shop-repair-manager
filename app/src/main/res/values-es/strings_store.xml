@@ -84,7 +84,7 @@
     <string name="cash_void_title">¿Anular esta venta?</string>
     <string name="cash_void_body">La venta se elimina y sus artículos regresan al inventario.</string>
     <string name="cash_void">Anular venta</string>
-    <string name="cash_repairs_note">Las reparaciones cuentan cuando la orden se marca como pagada.</string>
+    <string name="cash_repairs_note">Los anticipos y cobros de las órdenes se registran aquí automáticamente.</string>
 
     <string name="rep_title">Reportes</string>
     <string name="rep_today">Hoy</string>
@@ -114,4 +114,5 @@
     <string name="common_delete">Eliminar</string>
     <string name="common_add">Agregar</string>
     <string name="common_back">Volver</string>
+    <string name="cash_repair_payment">Cobro de orden</string>
 </resources>

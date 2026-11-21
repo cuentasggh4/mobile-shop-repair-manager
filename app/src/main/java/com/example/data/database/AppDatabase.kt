@@ -29,7 +29,7 @@ import com.example.data.entity.SupplierEntity
         PurchaseEntity::class,
         CashMovementEntity::class
     ],
-    version = 7,
+    version = 8,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -116,6 +116,22 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
+        // v8: money collected on job cards (advances, payments, delivery) is recorded in the cash register.
+        val MIGRATION_7_8 = object : androidx.room.migration.Migration(7, 8) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE cash_movements ADD COLUMN jobId INTEGER NOT NULL DEFAULT 0")
+                db.execSQL("ALTER TABLE cash_movements ADD COLUMN paymentMode TEXT NOT NULL DEFAULT 'Cash'")
+                // Record what existing jobs have already collected so past totals stay correct.
+                db.execSQL(
+                    "INSERT INTO cash_movements (type, amount, note, createdAt, jobId, paymentMode) " +
+                        "SELECT 'REPAIR', amt, '#' || jobNumber, COALESCE(deliveredAt, updatedAt), id, " +
+                        "CASE WHEN paymentMode = '' THEN 'Cash' ELSE paymentMode END " +
+                        "FROM (SELECT *, CASE WHEN isPaid = 1 THEN MAX((CASE WHEN finalCost > 0 THEN finalCost ELSE estimatedCost END) - discount, 0) " +
+                        "ELSE advancePaid END AS amt FROM job_cards WHERE stage != 'CANCELLED') WHERE amt > 0"
+                )
+            }
+        }
+
         @Volatile
         private var INSTANCE: AppDatabase? = null
 
@@ -125,7 +141,7 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "mobile_repair_shop.db"
-                ).addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7)
+                ).addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8)
                  .fallbackToDestructiveMigration()
                  .build()
                 INSTANCE = instance

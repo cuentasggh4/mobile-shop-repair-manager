@@ -53,7 +53,10 @@ data class PurchaseEntity(
     val createdAt: Long = System.currentTimeMillis()
 )
 
-/** Manual cash register movement: type is "IN" (deposit) or "EXPENSE". */
+/**
+ * Cash register movement. type is "IN" (manual deposit), "EXPENSE", or "REPAIR"
+ * (money collected on a job card: advance, partial payment or final payment; negative = reversal).
+ */
 @Entity(tableName = "cash_movements")
 data class CashMovementEntity(
     @PrimaryKey(autoGenerate = true)
@@ -61,5 +64,7 @@ data class CashMovementEntity(
     val type: String,
     val amount: Double,
     val note: String = "",
-    val createdAt: Long = System.currentTimeMillis()
+    val createdAt: Long = System.currentTimeMillis(),
+    val jobId: Long = 0,
+    val paymentMode: String = "Cash"
 )
