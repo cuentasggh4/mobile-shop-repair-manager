@@ -28,4 +28,9 @@
     <string name="q_to_inventory">Agregar al inventario</string>
     <string name="q_add_to_quote">Agregar a la cotización</string>
     <string name="q_added_inventory">Agregado al inventario: %1$s</string>
+    <string name="q_marketplace">Cotización de Mercado Libre (sin descuento)</string>
+    <string name="q_discount_title">Descuento (solo pantallas del tabulador)</string>
+    <string name="q_no_discount">Sin descuento</string>
+    <string name="q_max">máx.</string>
+    <string name="q_tariff_note">Las pantallas usan el tabulador y ya incluyen la mano de obra. Las demás piezas: costo más margen.</string>
 </resources>

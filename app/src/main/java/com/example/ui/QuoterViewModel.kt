@@ -13,6 +13,7 @@ import com.example.data.entity.PriceItemEntity
 import com.example.data.repository.StoreRepository
 import com.example.util.LanguageManager
 import com.example.util.PriceListPdfParser
+import com.example.util.ScreenTariff
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -25,7 +26,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.math.ceil
 
-data class QuoteLine(val itemId: Long, val name: String, val cost: Double, val qty: Int)
+data class QuoteLine(val itemId: Long, val name: String, val cost: Double, val qty: Int, val category: String = "")
 
 sealed interface ImportState {
     data object Idle : ImportState
@@ -38,6 +39,17 @@ sealed interface ImportState {
 fun quotePrice(cost: Double, marginPercent: Double): Double {
     val raw = cost * (1.0 + marginPercent / 100.0)
     return ceil(raw / 5.0) * 5.0
+}
+
+/**
+ * Price the customer pays for one unit. Screens follow the shop tariff table (with the chosen discount);
+ * everything else is supplier cost plus the margin.
+ */
+fun priceOf(category: String, cost: Double, marginPercent: Double, discountPercent: Int, noDiscount: Boolean): Double {
+    if (ScreenTariff.isScreen(category)) {
+        ScreenTariff.price(cost, if (noDiscount) 0 else discountPercent)?.let { return it }
+    }
+    return quotePrice(cost, marginPercent)
 }
 
 class QuoterViewModel(application: Application) : AndroidViewModel(application) {
@@ -78,6 +90,8 @@ class QuoterViewModel(application: Application) : AndroidViewModel(application) 
     val laborText = MutableStateFlow("")
     val customerName = MutableStateFlow("")
     val lines = MutableStateFlow<List<QuoteLine>>(emptyList())
+    val discountPercent = MutableStateFlow(0)
+    val marketplaceQuote = MutableStateFlow(false)
 
     fun marginPercent(): Double = marginText.value.replace(',', '.').toDoubleOrNull()?.coerceAtLeast(0.0) ?: 0.0
 
@@ -95,7 +109,7 @@ class QuoterViewModel(application: Application) : AndroidViewModel(application) 
         lines.value = if (current.any { it.itemId == item.id }) {
             current.map { if (it.itemId == item.id) it.copy(qty = it.qty + 1) else it }
         } else {
-            current + QuoteLine(item.id, item.name, item.cost, 1)
+            current + QuoteLine(item.id, item.name, item.cost, 1, item.category)
         }
     }
 
@@ -109,6 +123,8 @@ class QuoterViewModel(application: Application) : AndroidViewModel(application) 
         lines.value = emptyList()
         laborText.value = ""
         customerName.value = ""
+        discountPercent.value = 0
+        marketplaceQuote.value = false
     }
 
     fun importPdf(uri: Uri, replaceExisting: Boolean) {
@@ -160,7 +176,7 @@ class QuoterViewModel(application: Application) : AndroidViewModel(application) 
                     compatibleModels = "",
                     quantityInStock = 0,
                     purchaseCost = item.cost,
-                    sellingPrice = quotePrice(item.cost, marginPercent()),
+                    sellingPrice = priceOf(item.category, item.cost, marginPercent(), 0, true),
                     locationRack = ""
                 )
             )

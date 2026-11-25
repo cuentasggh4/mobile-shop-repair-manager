@@ -57,7 +57,8 @@ import com.example.R
 import com.example.ui.ImportState
 import com.example.ui.QuoterViewModel
 import com.example.ui.ShopViewModel
-import com.example.ui.quotePrice
+import com.example.ui.priceOf
+import com.example.util.ScreenTariff
 import com.example.ui.theme.ShopTheme
 
 @Composable
@@ -76,6 +77,8 @@ fun QuoterScreen(
     val laborText by quoter.laborText.collectAsStateWithLifecycle()
     val customerName by quoter.customerName.collectAsStateWithLifecycle()
     val lines by quoter.lines.collectAsStateWithLifecycle()
+    val discount by quoter.discountPercent.collectAsStateWithLifecycle()
+    val marketplace by quoter.marketplaceQuote.collectAsStateWithLifecycle()
     val shopProfile by viewModel.shopProfile.collectAsStateWithLifecycle()
     val currency = shopProfile.currencySymbol.ifBlank { "$" }
     val colors = ShopTheme.colors
@@ -96,7 +99,7 @@ fun QuoterScreen(
 
     val margin = quoter.marginPercent()
     val labor = parseDecimal(laborText) ?: 0.0
-    val partsTotal = lines.sumOf { quotePrice(it.cost, margin) * it.qty }
+    val partsTotal = lines.sumOf { priceOf(it.category, it.cost, margin, discount, marketplace) * it.qty }
     val total = partsTotal + labor
 
     StoreScaffold(
@@ -236,6 +239,45 @@ fun QuoterScreen(
                             )
                         }
                         Spacer(Modifier.height(8.dp))
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Checkbox(
+                                checked = marketplace,
+                                onCheckedChange = { quoter.marketplaceQuote.value = it }
+                            )
+                            Text(
+                                text = stringResource(R.string.q_marketplace),
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
+                        Text(
+                            text = stringResource(R.string.q_discount_title),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            items(ScreenTariff.DISCOUNTS) { pct ->
+                                FilterChip(
+                                    selected = (if (marketplace) 0 else discount) == pct,
+                                    enabled = !marketplace,
+                                    onClick = { quoter.discountPercent.value = pct },
+                                    label = {
+                                        Text(
+                                            when (pct) {
+                                                0 -> stringResource(R.string.q_no_discount)
+                                                25 -> "25% " + stringResource(R.string.q_max)
+                                                else -> "$pct%"
+                                            }
+                                        )
+                                    }
+                                )
+                            }
+                        }
+                        Text(
+                            text = stringResource(R.string.q_tariff_note),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Spacer(Modifier.height(8.dp))
                         if (lines.isEmpty()) {
                             Text(
                                 text = stringResource(R.string.q_quote_empty),
@@ -244,7 +286,7 @@ fun QuoterScreen(
                             )
                         } else {
                             lines.forEach { line ->
-                                val unit = quotePrice(line.cost, margin)
+                                val unit = priceOf(line.category, line.cost, margin, discount, marketplace)
                                 Row(
                                     modifier = Modifier.fillMaxWidth().padding(vertical = 3.dp),
                                     verticalAlignment = Alignment.CenterVertically
@@ -279,7 +321,7 @@ fun QuoterScreen(
                                             shop = shopProfile.shopName,
                                             customer = customerName,
                                             currency = currency,
-                                            lines = lines.map { Triple(it.name, quotePrice(it.cost, margin), it.qty) },
+                                            lines = lines.map { Triple(it.name, priceOf(it.category, it.cost, margin, discount, marketplace), it.qty) },
                                             labor = labor,
                                             total = total
                                         )
@@ -361,7 +403,7 @@ fun QuoterScreen(
                                     text = stringResource(
                                         R.string.q_cost_price,
                                         formatMoney(currency, item.cost),
-                                        formatMoney(currency, quotePrice(item.cost, margin))
+                                        formatMoney(currency, priceOf(item.category, item.cost, margin, 0, true))
                                     ),
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
