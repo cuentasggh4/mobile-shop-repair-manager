@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <string name="store_quoter">Quoter</string>
+    <string name="store_quoter_desc">Import supplier price lists (PDF) and quote repairs</string>
+    <string name="q_title">Quoter</string>
+    <string name="q_subtitle">Supplier price list and quotes</string>
+    <string name="q_catalog_count">%1$d products in the price list</string>
+    <string name="q_replace_list">Replace the previous list when importing</string>
+    <string name="q_import_pdf">Import PDF list</string>
+    <string name="q_clear_list">Delete list</string>
+    <string name="q_importing">Reading the PDF…</string>
+    <string name="q_import_done">%1$d products imported (%2$d rows without price were skipped).</string>
+    <string name="q_empty_hint">Import a supplier price list in PDF (product and price table) and the products load automatically.</string>
+    <string name="q_import_nothing">No products with a price were found in that PDF.</string>
+    <string name="q_quote_title">Quote</string>
+    <string name="q_customer">Customer (optional)</string>
+    <string name="q_margin">Profit margin</string>
+    <string name="q_labor">Labor</string>
+    <string name="q_quote_empty">Tap + on a product to add it to the quote.</string>
+    <string name="q_parts_total">Parts</string>
+    <string name="q_total">Total</string>
+    <string name="q_share">Share quote</string>
+    <string name="q_clear_quote">Clear</string>
+    <string name="q_search_hint">Search part or model…</string>
+    <string name="q_all">All</string>
+    <string name="q_no_results">No products match</string>
+    <string name="q_cost_price">Cost %1$s · Price %2$s</string>
+    <string name="q_to_inventory">Add to inventory</string>
+    <string name="q_add_to_quote">Add to quote</string>
+    <string name="q_added_inventory">Added to inventory: %1$s</string>
+</resources>

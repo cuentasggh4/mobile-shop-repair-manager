@@ -68,3 +68,15 @@ data class CashMovementEntity(
     val jobId: Long = 0,
     val paymentMode: String = "Cash"
 )
+
+/** A product line imported from a supplier price list (PDF). Used by the quoter. */
+@Entity(tableName = "price_items")
+data class PriceItemEntity(
+    @PrimaryKey(autoGenerate = true)
+    val id: Long = 0,
+    val name: String,
+    val category: String = "",
+    val cost: Double,
+    val source: String = "",
+    val importedAt: Long = System.currentTimeMillis()
+)

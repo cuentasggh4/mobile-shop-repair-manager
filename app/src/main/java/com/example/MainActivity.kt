@@ -53,6 +53,7 @@ import com.example.ui.screens.DashboardScreen
 import com.example.ui.screens.InventoryScreen
 import com.example.ui.screens.JobDetailScreen
 import com.example.ui.screens.PosScreen
+import com.example.ui.screens.QuoterScreen
 import com.example.ui.screens.ReportsScreen
 import com.example.ui.screens.StoreHubScreen
 import com.example.ui.screens.KhataBookScreen
@@ -146,6 +147,7 @@ class MainActivity : ComponentActivity() {
                         AppScreen.POS -> PosScreen(viewModel = viewModel)
                         AppScreen.CASH_REGISTER -> CashRegisterScreen(viewModel = viewModel)
                         AppScreen.REPORTS -> ReportsScreen(viewModel = viewModel)
+                        AppScreen.QUOTER -> QuoterScreen(viewModel = viewModel)
                     }
                 }
 
