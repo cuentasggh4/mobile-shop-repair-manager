@@ -28,4 +28,9 @@
     <string name="q_to_inventory">Add to inventory</string>
     <string name="q_add_to_quote">Add to quote</string>
     <string name="q_added_inventory">Added to inventory: %1$s</string>
+    <string name="q_marketplace">Quote for Mercado Libre (no discount)</string>
+    <string name="q_discount_title">Discount (screens from the price table only)</string>
+    <string name="q_no_discount">No discount</string>
+    <string name="q_max">max.</string>
+    <string name="q_tariff_note">Screens use the shop price table and already include labor. Other parts: cost plus margin.</string>
 </resources>
