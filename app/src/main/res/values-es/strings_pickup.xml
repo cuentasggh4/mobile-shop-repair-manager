@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pickup_card_title">Aviso de recogida</string>
+    <string name="pickup_card_desc">Cuando un equipo queda listo, la app te recuerda avisarle al cliente con el plazo límite para recogerlo.</string>
+    <string name="pickup_deadline_days">Plazo para recoger (días)</string>
+    <string name="pickup_banner_title">Avisar a %1$d clientes que su equipo está listo</string>
+    <string name="pickup_banner_deadline">Límite %1$s</string>
+    <string name="pickup_send">Avisar</string>
+    <string name="notif_pickup_reminder_title">Avisa a %1$s: su equipo está listo</string>
+    <string name="notif_pickup_reminder_body">Orden #%1$s · %2$s. Plazo límite de recogida: %3$s. Toca para enviar el mensaje.</string>
+</resources>

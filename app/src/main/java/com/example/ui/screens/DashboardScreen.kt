@@ -109,6 +109,7 @@ fun DashboardScreen(
     val syncConfig by viewModel.googleSyncConfig.collectAsStateWithLifecycle()
     val isSyncing by viewModel.isSyncing.collectAsStateWithLifecycle()
     val showUpdateBanner by viewModel.showUpdateBanner.collectAsStateWithLifecycle()
+    val pickupVersion by viewModel.pickupVersion.collectAsStateWithLifecycle()
     val updateCheckState by viewModel.updateCheckState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     val shopColors = ShopTheme.colors
@@ -343,6 +344,48 @@ fun DashboardScreen(
                             onDismiss = { viewModel.dismissUpdateBanner() },
                             modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 14.dp)
                         )
+                    }
+                }
+
+                // Devices ready for pickup whose customer has not been notified yet
+                val pendingPickup = allJobsList.filter {
+                    it.stage == RepairStage.READY_FOR_PICKUP && pickupVersion >= 0 &&
+                        !com.example.util.PickupReminders.isSent(context, it)
+                }
+                if (pendingPickup.isNotEmpty()) {
+                    item(key = "pickup_notice_banner") {
+                        StoreCard(modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 14.dp)) {
+                            Text(
+                                text = stringResource(R.string.pickup_banner_title, pendingPickup.size),
+                                style = MaterialTheme.typography.titleSmall,
+                                fontWeight = FontWeight.Bold
+                            )
+                            pendingPickup.take(5).forEach { job ->
+                                Row(
+                                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Column(modifier = Modifier.weight(1f)) {
+                                        Text(
+                                            text = "${job.customerName} · ${job.deviceBrand} ${job.deviceModel}".trim(),
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            maxLines = 2
+                                        )
+                                        Text(
+                                            text = stringResource(
+                                                R.string.pickup_banner_deadline,
+                                                com.example.util.PickupReminders.formatDeadline(context, job)
+                                            ),
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
+                                    Button(onClick = { viewModel.prepareWhatsAppMessage(job) }) {
+                                        Text(stringResource(R.string.pickup_send))
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
 

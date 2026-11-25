@@ -32,6 +32,7 @@ import com.example.data.remote.GoogleSyncConfig
 import com.example.data.remote.SyncSummary
 import com.example.data.remote.VersionCheckService
 import com.example.util.LanguageManager
+import com.example.util.PickupReminders
 import com.example.util.ReceiptPdfGenerator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -620,7 +621,7 @@ class ShopRepository(
             )
             RepairStage.READY_FOR_PICKUP -> tr(
                 R.string.wa_ready, shopName, job.customerName, device, job.jobNumber,
-                "$currency$due", profile.address
+                "$currency$due", profile.address, PickupReminders.formatDeadline(appContext, job)
             )
             RepairStage.DELIVERED -> tr(
                 R.string.wa_delivered, shopName, job.customerName, device, profile.warrantyDays, shopContact

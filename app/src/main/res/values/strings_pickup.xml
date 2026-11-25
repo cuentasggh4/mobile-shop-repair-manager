@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <string name="pickup_card_title">Pickup notice</string>
+    <string name="pickup_card_desc">When a device is ready, the app reminds you to message the customer with the pickup deadline.</string>
+    <string name="pickup_deadline_days">Pickup deadline (days)</string>
+    <string name="pickup_banner_title">Tell %1$d customers their device is ready</string>
+    <string name="pickup_banner_deadline">Deadline %1$s</string>
+    <string name="pickup_send">Notify</string>
+    <string name="notif_pickup_reminder_title">Message %1$s: their device is ready</string>
+    <string name="notif_pickup_reminder_body">Job #%1$s · %2$s. Pickup deadline: %3$s. Tap to send the message.</string>
+</resources>
