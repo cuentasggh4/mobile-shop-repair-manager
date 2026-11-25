@@ -403,7 +403,7 @@ fun QuoterScreen(
                                     text = stringResource(
                                         R.string.q_cost_price,
                                         formatMoney(currency, item.cost),
-                                        formatMoney(currency, priceOf(item.category, item.cost, margin, 0, true))
+                                        formatMoney(currency, priceOf(item.category, item.cost, margin, discount, marketplace))
                                     ),
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant

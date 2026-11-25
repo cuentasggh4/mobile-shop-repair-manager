@@ -54,6 +54,11 @@ fun priceOf(category: String, cost: Double, marginPercent: Double, discountPerce
 
 class QuoterViewModel(application: Application) : AndroidViewModel(application) {
 
+    private companion object {
+        /** Screens from 150 to 900 are always offered at the 25 percent price. */
+        const val DEFAULT_DISCOUNT = 25
+    }
+
     private val repository = StoreRepository(AppDatabase.getInstance(application))
     private val prefs = application.getSharedPreferences("quoter_prefs", Context.MODE_PRIVATE)
 
@@ -90,7 +95,7 @@ class QuoterViewModel(application: Application) : AndroidViewModel(application) 
     val laborText = MutableStateFlow("")
     val customerName = MutableStateFlow("")
     val lines = MutableStateFlow<List<QuoteLine>>(emptyList())
-    val discountPercent = MutableStateFlow(0)
+    val discountPercent = MutableStateFlow(DEFAULT_DISCOUNT)
     val marketplaceQuote = MutableStateFlow(false)
 
     fun marginPercent(): Double = marginText.value.replace(',', '.').toDoubleOrNull()?.coerceAtLeast(0.0) ?: 0.0
@@ -123,7 +128,7 @@ class QuoterViewModel(application: Application) : AndroidViewModel(application) 
         lines.value = emptyList()
         laborText.value = ""
         customerName.value = ""
-        discountPercent.value = 0
+        discountPercent.value = DEFAULT_DISCOUNT
         marketplaceQuote.value = false
     }
 
@@ -176,7 +181,7 @@ class QuoterViewModel(application: Application) : AndroidViewModel(application) 
                     compatibleModels = "",
                     quantityInStock = 0,
                     purchaseCost = item.cost,
-                    sellingPrice = priceOf(item.category, item.cost, marginPercent(), 0, true),
+                    sellingPrice = priceOf(item.category, item.cost, marginPercent(), discountPercent.value, marketplaceQuote.value),
                     locationRack = ""
                 )
             )
