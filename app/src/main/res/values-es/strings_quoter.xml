@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="store_quoter">Cotizador</string>
+    <string name="store_quoter_desc">Importa listas de precios de proveedores (PDF) y cotiza reparaciones</string>
+    <string name="q_title">Cotizador</string>
+    <string name="q_subtitle">Lista de precios del proveedor y cotizaciones</string>
+    <string name="q_catalog_count">%1$d productos en la lista de precios</string>
+    <string name="q_replace_list">Reemplazar la lista anterior al importar</string>
+    <string name="q_import_pdf">Importar lista PDF</string>
+    <string name="q_clear_list">Borrar lista</string>
+    <string name="q_importing">Leyendo el PDF…</string>
+    <string name="q_import_done">%1$d productos importados (se omitieron %2$d filas sin precio).</string>
+    <string name="q_empty_hint">Importa una lista de precios de proveedor en PDF (tabla de producto y precio) y los productos se cargan solos.</string>
+    <string name="q_import_nothing">No se encontraron productos con precio en ese PDF.</string>
+    <string name="q_quote_title">Cotización</string>
+    <string name="q_customer">Cliente (opcional)</string>
+    <string name="q_margin">Margen de ganancia</string>
+    <string name="q_labor">Mano de obra</string>
+    <string name="q_quote_empty">Toca + en un producto para agregarlo a la cotización.</string>
+    <string name="q_parts_total">Refacciones</string>
+    <string name="q_total">Total</string>
+    <string name="q_share">Compartir cotización</string>
+    <string name="q_clear_quote">Limpiar</string>
+    <string name="q_search_hint">Buscar refacción o modelo…</string>
+    <string name="q_all">Todas</string>
+    <string name="q_no_results">No hay productos que coincidan</string>
+    <string name="q_cost_price">Costo %1$s · Precio %2$s</string>
+    <string name="q_to_inventory">Agregar al inventario</string>
+    <string name="q_add_to_quote">Agregar a la cotización</string>
+    <string name="q_added_inventory">Agregado al inventario: %1$s</string>
+</resources>

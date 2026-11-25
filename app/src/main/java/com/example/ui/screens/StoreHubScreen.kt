@@ -18,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Assessment
 import androidx.compose.material.icons.filled.Inventory2
 import androidx.compose.material.icons.filled.PointOfSale
+import androidx.compose.material.icons.filled.RequestQuote
 import androidx.compose.material.icons.filled.Savings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -88,6 +89,14 @@ fun StoreHubScreen(
                         title = stringResource(R.string.store_cash),
                         description = stringResource(R.string.store_cash_desc),
                         onClick = { viewModel.navigateTo(AppScreen.CASH_REGISTER) }
+                    )
+                }
+                item {
+                    HubEntry(
+                        icon = Icons.Default.RequestQuote,
+                        title = stringResource(R.string.store_quoter),
+                        description = stringResource(R.string.store_quoter_desc),
+                        onClick = { viewModel.navigateTo(AppScreen.QUOTER) }
                     )
                 }
                 item {

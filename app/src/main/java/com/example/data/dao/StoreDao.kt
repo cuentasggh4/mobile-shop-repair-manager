@@ -7,6 +7,7 @@ import androidx.room.Query
 import androidx.room.Update
 import com.example.data.entity.CashMovementEntity
 import com.example.data.entity.InventoryPartEntity
+import com.example.data.entity.PriceItemEntity
 import com.example.data.entity.PurchaseEntity
 import com.example.data.entity.SaleEntity
 import com.example.data.entity.SaleItemEntity
@@ -60,6 +61,16 @@ interface StoreDao {
 
     @Query("SELECT * FROM purchases WHERE createdAt >= :from AND createdAt < :to ORDER BY createdAt DESC")
     fun getPurchasesBetween(from: Long, to: Long): Flow<List<PurchaseEntity>>
+
+    // --- Supplier price lists (quoter) ---
+    @Insert
+    suspend fun insertPriceItems(items: List<PriceItemEntity>)
+
+    @Query("DELETE FROM price_items")
+    suspend fun clearPriceItems()
+
+    @Query("SELECT * FROM price_items ORDER BY name")
+    fun getPriceItems(): Flow<List<PriceItemEntity>>
 
     // --- Cash movements ---
     @Insert

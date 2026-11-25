@@ -5,6 +5,7 @@ import com.example.data.database.AppDatabase
 import com.example.data.entity.CashMovementEntity
 import com.example.data.entity.InventoryPartEntity
 import com.example.data.entity.JobCardEntity
+import com.example.data.entity.PriceItemEntity
 import com.example.data.entity.PurchaseEntity
 import com.example.data.entity.SaleEntity
 import com.example.data.entity.SaleItemEntity
@@ -154,6 +155,17 @@ class StoreRepository(private val db: AppDatabase) {
     private val jobs = db.jobCardDao()
 
     val parts: Flow<List<InventoryPartEntity>> = inventory.getAllParts()
+
+    val priceItems: Flow<List<PriceItemEntity>> = store.getPriceItems()
+
+    suspend fun replacePriceList(items: List<PriceItemEntity>, replaceExisting: Boolean) = withContext(Dispatchers.IO) {
+        db.withTransaction {
+            if (replaceExisting) store.clearPriceItems()
+            items.chunked(500).forEach { store.insertPriceItems(it) }
+        }
+    }
+
+    suspend fun clearPriceList() = withContext(Dispatchers.IO) { store.clearPriceItems() }
     val suppliers: Flow<List<SupplierEntity>> = store.getAllSuppliers()
     val allJobs: Flow<List<JobCardEntity>> = jobs.getAllJobs()
 

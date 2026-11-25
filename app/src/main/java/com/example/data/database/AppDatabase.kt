@@ -12,6 +12,7 @@ import com.example.data.dao.StoreDao
 import com.example.data.entity.CashMovementEntity
 import com.example.data.entity.InventoryPartEntity
 import com.example.data.entity.JobCardEntity
+import com.example.data.entity.PriceItemEntity
 import com.example.data.entity.PurchaseEntity
 import com.example.data.entity.SaleEntity
 import com.example.data.entity.SaleItemEntity
@@ -27,9 +28,10 @@ import com.example.data.entity.SupplierEntity
         SaleEntity::class,
         SaleItemEntity::class,
         PurchaseEntity::class,
-        CashMovementEntity::class
+        CashMovementEntity::class,
+        PriceItemEntity::class
     ],
-    version = 8,
+    version = 9,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -132,6 +134,18 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
+        // v9: supplier price lists imported from PDF for the quoter.
+        val MIGRATION_8_9 = object : androidx.room.migration.Migration(8, 9) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                db.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `price_items` (" +
+                        "`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                        "`name` TEXT NOT NULL, `category` TEXT NOT NULL, `cost` REAL NOT NULL, " +
+                        "`source` TEXT NOT NULL, `importedAt` INTEGER NOT NULL)"
+                )
+            }
+        }
+
         @Volatile
         private var INSTANCE: AppDatabase? = null
 
@@ -141,7 +155,7 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "mobile_repair_shop.db"
-                ).addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8)
+                ).addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9)
                  .fallbackToDestructiveMigration()
                  .build()
                 INSTANCE = instance
