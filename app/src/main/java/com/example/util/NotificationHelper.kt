@@ -119,6 +119,27 @@ object NotificationHelper {
         )
     }
 
+    fun notifyPickupReminder(
+        context: Context,
+        jobId: Long,
+        jobNumber: String,
+        customerName: String,
+        deviceName: String,
+        deadline: String
+    ) {
+        if (!hasNotificationPermission(context)) return
+        ensureChannels(context)
+
+        postNotification(
+            context = context,
+            channelId = CHANNEL_REPAIR_UPDATES,
+            notificationId = ((jobId.toInt() + 20000) and 0x7FFFFFFF),
+            title = LanguageManager.getString(context, R.string.notif_pickup_reminder_title, customerName),
+            body = LanguageManager.getString(context, R.string.notif_pickup_reminder_body, jobNumber, deviceName, deadline),
+            jobId = jobId
+        )
+    }
+
     fun notifyBackupResult(
         context: Context,
         success: Boolean,

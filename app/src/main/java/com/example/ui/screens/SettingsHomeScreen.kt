@@ -258,6 +258,11 @@ fun SettingsHomeScreen(
                     LanguageCard()
                 }
 
+                // Pickup deadline used by the "ready for pickup" notice
+                item {
+                    PickupCard()
+                }
+
                 // Appearance / Theme Mode Card (System / Light / Dark)
                 item {
                     AppCard(testTag = "card_settings_theme") {

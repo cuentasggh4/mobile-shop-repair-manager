@@ -143,6 +143,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
 
     init {
         NotificationHelper.ensureChannels(application)
+        com.example.util.PickupReminderWorker.schedule(application)
         val db = AppDatabase.getInstance(application)
         val syncManager = GoogleSheetsSyncManager(application, db.jobCardDao(), db.shopProfileDao())
         repository = ShopRepository(getApplication<Application>(), db, syncManager)
@@ -684,6 +685,10 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                 val existingJob = selectedJob ?: repository.getJobById(id).first()
                 repository.updateJobStage(id, stage, note)
                 statusUpdateNote = ""
+                if (stage == RepairStage.READY_FOR_PICKUP) {
+                    // Remind the shop to tell the customer (message includes the pickup deadline).
+                    repository.getJobById(id).first()?.let { prepareWhatsAppMessage(it) }
+                }
                 if (notificationsEnabled.value && existingJob != null) {
                     NotificationHelper.notifyStageUpdated(
                         context = getApplication(),
@@ -1034,6 +1039,9 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    /** Bumped when a pickup notice is sent so the dashboard list refreshes. */
+    val pickupVersion = kotlinx.coroutines.flow.MutableStateFlow(0)
+
     // WhatsApp Dispatcher
     fun prepareWhatsAppMessage(job: JobCardEntity) {
         whatsAppTargetJob = job
@@ -1056,6 +1064,10 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
             val messageToSend = if (customWhatsAppText.isNotBlank()) customWhatsAppText else repository.generateWhatsAppTemplate(targetJob, shopProfile.value)
             val chosenPackage = targetPackage ?: shopProfile.value.preferredWhatsAppPackage
             repository.launchWhatsAppSafely(context, targetJob, messageToSend, chosenPackage)
+            if (targetJob.stage == RepairStage.READY_FOR_PICKUP) {
+                com.example.util.PickupReminders.markSent(getApplication(), targetJob)
+                pickupVersion.value = pickupVersion.value + 1
+            }
             showWhatsAppPreviewDialog = false
         } else {
             Toast.makeText(context, "No ticket selected", Toast.LENGTH_SHORT).show()
