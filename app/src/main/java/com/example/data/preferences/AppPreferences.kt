@@ -21,7 +21,8 @@ private val Context.appPreferencesDataStore: DataStore<Preferences> by preferenc
 class AppPreferences(private val context: Context) {
 
     companion object {
-        const val DEFAULT_GITHUB_REPO_SLUG = "sdm0023/mobile-shop-repair-manager"
+        const val DEFAULT_GITHUB_REPO_SLUG = "cuentasggh4/mobile-shop-repair-manager"
+        private const val ORIGINAL_REPO_SLUG = "sdm0023/mobile-shop-repair-manager"
         private val KEY_THEME_MODE = stringPreferencesKey("app_theme_mode")
         private val KEY_NOTIFICATIONS_ENABLED = booleanPreferencesKey("notifications_enabled")
         private val KEY_GITHUB_REPO_SLUG = stringPreferencesKey("github_repo_slug")
@@ -37,7 +38,9 @@ class AppPreferences(private val context: Context) {
     }
 
     val githubRepoSlug: Flow<String> = context.appPreferencesDataStore.data.map { prefs ->
-        prefs[KEY_GITHUB_REPO_SLUG]?.takeIf { it.isNotBlank() } ?: DEFAULT_GITHUB_REPO_SLUG
+        prefs[KEY_GITHUB_REPO_SLUG]
+            ?.takeIf { it.isNotBlank() && !it.equals(ORIGINAL_REPO_SLUG, ignoreCase = true) }
+            ?: DEFAULT_GITHUB_REPO_SLUG
     }
 
     suspend fun setThemeMode(mode: AppThemeMode) {
