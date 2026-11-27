@@ -31,6 +31,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
@@ -412,15 +413,34 @@ fun NewJobScreen(
                         }
 
                         Spacer(modifier = Modifier.height(10.dp))
-                        AppTextField(
-                            value = viewModel.newImeiOrSerial,
-                            onValueChange = { viewModel.newImeiOrSerial = it },
-                            label = stringResource(R.string.label_device_imei),
-                            placeholder = "15-digit IMEI or Serial (optional)",
-                            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                            modifier = Modifier.fillMaxWidth(),
-                            testTag = "input_device_imei"
-                        )
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            AppTextField(
+                                value = viewModel.newImeiOrSerial,
+                                onValueChange = { viewModel.newImeiOrSerial = it },
+                                label = stringResource(R.string.label_device_imei),
+                                placeholder = "15-digit IMEI or Serial (optional)",
+                                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                                modifier = Modifier.weight(1f),
+                                testTag = "input_device_imei"
+                            )
+                            IconButton(
+                                onClick = {
+                                    com.example.util.CodeScanner.scan(
+                                        context,
+                                        onResult = { viewModel.newImeiOrSerial = it },
+                                        onError = {
+                                            Toast.makeText(context, context.getString(R.string.scan_failed), Toast.LENGTH_SHORT).show()
+                                        }
+                                    )
+                                }
+                            ) {
+                                Icon(
+                                    Icons.Default.QrCodeScanner,
+                                    contentDescription = stringResource(R.string.scan_code),
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                            }
+                        }
                     }
                 }
 
@@ -499,6 +519,22 @@ fun NewJobScreen(
                             onStatusChange = { key, status ->
                                 viewModel.updateChecklistPoint(key, status)
                             }
+                        )
+                    }
+                }
+
+                // Damage diagram
+                item {
+                    AppCard(testTag = "card_damage_diagram") {
+                        Text(
+                            text = stringResource(R.string.dmg_title),
+                            style = MaterialTheme.typography.titleSmall,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        com.example.ui.components.DamageEditor(
+                            marks = viewModel.newDamageMarks,
+                            onMarksChange = { viewModel.newDamageMarks = it }
                         )
                     }
                 }
@@ -589,6 +625,26 @@ fun NewJobScreen(
                             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                             modifier = Modifier.fillMaxWidth(),
                             testTag = "input_tech_notes"
+                        )
+                    }
+                }
+
+                // Customer signature
+                item {
+                    AppCard(testTag = "card_signature") {
+                        Text(
+                            text = stringResource(R.string.sig_title),
+                            style = MaterialTheme.typography.titleSmall,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        Text(
+                            text = stringResource(R.string.sig_hint),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        com.example.ui.components.SignaturePad(
+                            onChange = { viewModel.newSignatureData = it }
                         )
                     }
                 }

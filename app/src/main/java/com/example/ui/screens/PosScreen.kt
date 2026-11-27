@@ -24,6 +24,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
@@ -120,9 +121,26 @@ fun PosScreen(
                         placeholder = { Text(stringResource(R.string.pos_search_hint)) },
                         leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
                         trailingIcon = {
-                            if (store.posQuery.isNotEmpty()) {
-                                IconButton(onClick = { store.posQuery = "" }) {
-                                    Icon(Icons.Default.Clear, contentDescription = "Clear")
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                if (store.posQuery.isNotEmpty()) {
+                                    IconButton(onClick = { store.posQuery = "" }) {
+                                        Icon(Icons.Default.Clear, contentDescription = "Clear")
+                                    }
+                                }
+                                IconButton(
+                                    onClick = {
+                                        com.example.util.CodeScanner.scan(
+                                            context,
+                                            onResult = { store.scanBarcode(it) },
+                                            onError = {}
+                                        )
+                                    }
+                                ) {
+                                    Icon(
+                                        Icons.Default.QrCodeScanner,
+                                        contentDescription = stringResource(R.string.scan_code),
+                                        tint = MaterialTheme.colorScheme.primary
+                                    )
                                 }
                             }
                         },

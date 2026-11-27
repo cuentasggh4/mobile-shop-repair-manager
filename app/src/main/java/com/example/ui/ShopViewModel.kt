@@ -445,6 +445,8 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
     var newEstimatedCost by mutableStateOf("")
     var newAdvancePaid by mutableStateOf("")
     var newTechnicianNotes by mutableStateOf("")
+    var newDamageMarks by mutableStateOf(listOf<com.example.util.DamageMark>())
+    var newSignatureData by mutableStateOf("")
 
     // Dialog & Action States
     var showPaymentDialog by mutableStateOf(false)
@@ -576,6 +578,8 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         newEstimatedCost = ""
         newAdvancePaid = ""
         newTechnicianNotes = ""
+        newDamageMarks = emptyList()
+        newSignatureData = ""
     }
 
     fun toggleIssueTag(tag: String) {
@@ -657,7 +661,9 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                     checklist = newChecklist,
                     estimatedCost = estCost,
                     advancePaid = advPaid,
-                    technicianNotes = newTechnicianNotes
+                    technicianNotes = newTechnicianNotes,
+                    damageMarks = com.example.util.DamageMarks.serialize(newDamageMarks),
+                    signatureData = newSignatureData
                 )
                 val createdJob = repository.getJobById(jobId).first()
                 if (notificationsEnabled.value) {

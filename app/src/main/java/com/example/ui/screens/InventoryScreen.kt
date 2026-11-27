@@ -23,6 +23,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.AlertDialog
@@ -507,11 +508,26 @@ private fun PartDialog(
                     onValueChange = { location = it },
                     label = stringResource(R.string.inv_field_location)
                 )
-                StoreField(
-                    value = barcode,
-                    onValueChange = { barcode = it },
-                    label = stringResource(R.string.inv_field_barcode)
-                )
+                val scanContext = androidx.compose.ui.platform.LocalContext.current
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    StoreField(
+                        value = barcode,
+                        onValueChange = { barcode = it },
+                        label = stringResource(R.string.inv_field_barcode),
+                        modifier = Modifier.weight(1f)
+                    )
+                    IconButton(
+                        onClick = {
+                            com.example.util.CodeScanner.scan(scanContext, onResult = { barcode = it }, onError = {})
+                        }
+                    ) {
+                        Icon(
+                            Icons.Default.QrCodeScanner,
+                            contentDescription = stringResource(R.string.scan_code),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
             }
         },
         confirmButton = {

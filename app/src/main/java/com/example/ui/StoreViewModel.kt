@@ -124,6 +124,17 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
         get() = (cartDiscountText.replace(',', '.').toDoubleOrNull() ?: 0.0).coerceIn(0.0, cartSubtotal)
     val cartTotal: Double get() = cartSubtotal - cartDiscount
 
+    /** Scanned barcode: adds the matching part to the cart, or searches for it when nothing matches. */
+    fun scanBarcode(code: String) {
+        val match = parts.value.firstOrNull { it.barcode.isNotBlank() && it.barcode.equals(code.trim(), ignoreCase = true) }
+        if (match != null) {
+            addPartToCart(match)
+            posQuery = ""
+        } else {
+            posQuery = code.trim()
+        }
+    }
+
     fun addPartToCart(part: InventoryPartEntity) {
         val existing = cart.find { it.partId == part.id }
         if (existing == null) {

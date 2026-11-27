@@ -31,7 +31,7 @@ import com.example.data.entity.SupplierEntity
         CashMovementEntity::class,
         PriceItemEntity::class
     ],
-    version = 9,
+    version = 10,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -146,6 +146,14 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
+        // v10: damage diagram and customer signature captured at intake.
+        val MIGRATION_9_10 = object : androidx.room.migration.Migration(9, 10) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE job_cards ADD COLUMN damageMarks TEXT NOT NULL DEFAULT ''")
+                db.execSQL("ALTER TABLE job_cards ADD COLUMN signatureData TEXT NOT NULL DEFAULT ''")
+            }
+        }
+
         @Volatile
         private var INSTANCE: AppDatabase? = null
 
@@ -155,7 +163,7 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "mobile_repair_shop.db"
-                ).addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9)
+                ).addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10)
                  .fallbackToDestructiveMigration()
                  .build()
                 INSTANCE = instance

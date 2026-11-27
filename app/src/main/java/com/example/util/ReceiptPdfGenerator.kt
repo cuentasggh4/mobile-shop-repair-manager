@@ -291,7 +291,7 @@ object ReceiptPdfGenerator {
 
             // 5. 12-Point Intake Checklist (3 columns x 4 rows)
             ensureSpace(30f)
-            canvas.drawText("12-POINT INTAKE CONDITION CHECKLIST", MARGIN_X, y, sectionHeaderPaint)
+            canvas.drawText(lc.getString(R.string.rc_checklist_title), MARGIN_X, y, sectionHeaderPaint)
             y += 12f
             val checklistMap = Converters.deserializeChecklist(job.checklistJson).toStatusMap().entries.toList()
             val chkColWidth = contentWidth / 3f
@@ -329,6 +329,83 @@ object ReceiptPdfGenerator {
             ensureSpace(16f)
             canvas.drawLine(MARGIN_X, y, rightEdge, y, dividerPaint)
             y += 14f
+
+            // 5b. Damage diagram recorded at reception
+            val damageMarks = DamageMarks.parse(job.damageMarks)
+            if (damageMarks.isNotEmpty()) {
+                ensureSpace(150f)
+                canvas.drawText(lc.getString(R.string.rc_damage_title), MARGIN_X, y, sectionHeaderPaint)
+                y += 10f
+                val phoneW = 52f
+                val phoneH = 104f
+                val phoneGap = 40f
+                val startX = MARGIN_X + 10f
+                val outlinePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                    color = darkText
+                    style = Paint.Style.STROKE
+                    strokeWidth = 1.2f
+                }
+                val phoneFill = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                    color = Color.parseColor("#F3F4F6")
+                    style = Paint.Style.FILL
+                }
+                val markPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                    style = Paint.Style.STROKE
+                    strokeWidth = 2f
+                    strokeCap = Paint.Cap.ROUND
+                }
+                listOf(false, true).forEachIndexed { index, back ->
+                    val left = startX + index * (phoneW + phoneGap)
+                    val rect = RectF(left, y, left + phoneW, y + phoneH)
+                    canvas.drawRoundRect(rect, 8f, 8f, phoneFill)
+                    canvas.drawRoundRect(rect, 8f, 8f, outlinePaint)
+                    if (back) {
+                        canvas.drawCircle(left + 10f, y + 10f, 3f, outlinePaint)
+                        canvas.drawCircle(left + 10f, y + 20f, 3f, outlinePaint)
+                    } else {
+                        canvas.drawLine(left + phoneW / 2f - 7f, y + 5f, left + phoneW / 2f + 7f, y + 5f, outlinePaint)
+                    }
+                    canvas.drawText(
+                        lc.getString(if (back) R.string.dmg_back else R.string.dmg_front),
+                        left,
+                        y + phoneH + 11f,
+                        labelPaint
+                    )
+                    damageMarks.filter { it.back == back }.forEach { m ->
+                        val cx = left + m.x * phoneW
+                        val cy = y + m.y * phoneH
+                        markPaint.color = DamageMarks.colorFor(m.type)
+                        when (m.type) {
+                            DamageMarks.CRACK -> {
+                                canvas.drawLine(cx - 3.5f, cy - 3.5f, cx + 3.5f, cy + 3.5f, markPaint)
+                                canvas.drawLine(cx - 3.5f, cy + 3.5f, cx + 3.5f, cy - 3.5f, markPaint)
+                            }
+                            DamageMarks.DENT -> {
+                                markPaint.style = Paint.Style.FILL
+                                canvas.drawCircle(cx, cy, 3.5f, markPaint)
+                                markPaint.style = Paint.Style.STROKE
+                            }
+                            else -> canvas.drawLine(cx - 3.5f, cy + 3.5f, cx + 3.5f, cy - 3.5f, markPaint)
+                        }
+                    }
+                }
+                // legend
+                val legendX = startX + 2 * (phoneW + phoneGap)
+                listOf(
+                    DamageMarks.SCRATCH to R.string.dmg_scratch,
+                    DamageMarks.CRACK to R.string.dmg_crack,
+                    DamageMarks.DENT to R.string.dmg_dent
+                ).forEachIndexed { i, (type, res) ->
+                    val ly = y + 20f + i * 16f
+                    val dot = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = DamageMarks.colorFor(type) }
+                    canvas.drawCircle(legendX, ly - 3f, 3.5f, dot)
+                    canvas.drawText(lc.getString(res), legendX + 10f, ly, labelPaint)
+                }
+                y += phoneH + 18f
+                ensureSpace(16f)
+                canvas.drawLine(MARGIN_X, y, rightEdge, y, dividerPaint)
+                y += 14f
+            }
 
             // 6. Billing Breakdown Box
             val currency = profile.currencySymbol
@@ -413,9 +490,17 @@ object ReceiptPdfGenerator {
             }
 
             // 9. Signatures Footer (Ensure non-overlapping placement at bottom of final page)
-            ensureSpace(54f)
+            val signatureBitmap = SignatureCodec.decode(job.signatureData)
+            ensureSpace(if (signatureBitmap != null) 96f else 54f)
             val sigLineY = PAGE_HEIGHT - 44f
             val sigWidth = 140f
+            if (signatureBitmap != null) {
+                val scale = minOf(sigWidth / signatureBitmap.width, 40f / signatureBitmap.height)
+                val w = signatureBitmap.width * scale
+                val h = signatureBitmap.height * scale
+                val dst = RectF(MARGIN_X + (sigWidth - w) / 2f, sigLineY - 3f - h, MARGIN_X + (sigWidth + w) / 2f, sigLineY - 3f)
+                canvas.drawBitmap(signatureBitmap, null, dst, null)
+            }
             canvas.drawLine(MARGIN_X, sigLineY, MARGIN_X + sigWidth, sigLineY, strongDividerPaint)
             canvas.drawText(lc.getString(R.string.rc_customer_signature), MARGIN_X + 24f, sigLineY + 13f, labelPaint)
 

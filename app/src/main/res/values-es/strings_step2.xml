@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dmg_front">Frente</string>
+    <string name="dmg_back">Atrás</string>
+    <string name="dmg_scratch">Rayón</string>
+    <string name="dmg_crack">Grieta</string>
+    <string name="dmg_dent">Golpe</string>
+    <string name="dmg_hint">Elige el tipo de daño y toca el teléfono donde está.</string>
+    <string name="dmg_undo">Deshacer</string>
+    <string name="dmg_clear">Borrar todo</string>
+    <string name="dmg_title">Diagrama de daños</string>
+    <string name="sig_title">Firma del cliente</string>
+    <string name="sig_hint">El cliente firma con el dedo para aceptar el estado del equipo y los términos.</string>
+    <string name="sig_clear">Borrar firma</string>
+    <string name="scan_code">Escanear código</string>
+    <string name="scan_failed">No se pudo escanear el código</string>
+    <string name="rc_damage_title">DAÑOS DEL EQUIPO AL RECIBIRLO</string>
+    <string name="rc_checklist_title">REVISIÓN DE 12 PUNTOS AL RECIBIR</string>
+    <string name="intake_card_title">Registro de recepción</string>
+</resources>

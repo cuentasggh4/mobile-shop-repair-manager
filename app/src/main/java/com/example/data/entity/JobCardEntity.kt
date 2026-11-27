@@ -35,7 +35,9 @@ data class JobCardEntity(
     val recipientPhone: String = "", // Phone of person who picked up if not original customer
     val createdAt: Long = System.currentTimeMillis(),
     val updatedAt: Long = System.currentTimeMillis(),
-    val deliveredAt: Long? = null
+    val deliveredAt: Long? = null,
+    val damageMarks: String = "", // Serialized damage diagram marks (see DamageMarks)
+    val signatureData: String = "" // Customer signature at intake, Base64 PNG
 ) {
     val statusLogs: List<com.example.data.model.StatusLogEntry>
         get() = com.example.data.database.Converters.deserializeStatusLogs(statusLogsJson)
