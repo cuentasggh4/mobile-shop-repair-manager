@@ -588,6 +588,11 @@ fun JobDetailScreen(
                 }
 
                 // Card 8: Parts used from inventory
+                if (job.damageMarks.isNotBlank() || job.signatureData.isNotBlank()) {
+                    item {
+                        JobIntakeCard(job = job)
+                    }
+                }
                 item {
                     JobPartsCard(job = job, currency = shopProfile.currencySymbol)
                 }

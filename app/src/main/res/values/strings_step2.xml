@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <string name="dmg_front">Front</string>
+    <string name="dmg_back">Back</string>
+    <string name="dmg_scratch">Scratch</string>
+    <string name="dmg_crack">Crack</string>
+    <string name="dmg_dent">Dent</string>
+    <string name="dmg_hint">Choose the type of damage and tap the phone where it is.</string>
+    <string name="dmg_undo">Undo</string>
+    <string name="dmg_clear">Clear</string>
+    <string name="dmg_title">Damage diagram</string>
+    <string name="sig_title">Customer signature</string>
+    <string name="sig_hint">The customer signs with a finger to accept the condition of the device and the terms.</string>
+    <string name="sig_clear">Clear signature</string>
+    <string name="scan_code">Scan code</string>
+    <string name="scan_failed">Could not scan the code</string>
+    <string name="rc_damage_title">DEVICE DAMAGE AT RECEPTION</string>
+    <string name="rc_checklist_title">12-POINT INTAKE CONDITION CHECKLIST</string>
+    <string name="intake_card_title">Reception record</string>
+</resources>

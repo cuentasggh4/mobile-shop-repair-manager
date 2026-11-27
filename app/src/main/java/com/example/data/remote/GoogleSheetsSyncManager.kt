@@ -740,7 +740,14 @@ class GoogleSheetsSyncManager(
                     )
                 )
             } else if (remoteItem.job.updatedAt > localItem.updatedAt) {
-                jobCardDao.updateJob(remoteItem.job.copy(id = localItem.id, recordUuid = uuid))
+                jobCardDao.updateJob(
+                    remoteItem.job.copy(
+                        id = localItem.id,
+                        recordUuid = uuid,
+                        damageMarks = localItem.damageMarks,
+                        signatureData = localItem.signatureData
+                    )
+                )
                 pulledCount++
                 if (remoteItem.needsUuidBackfill) {
                     rowUpdates.add(

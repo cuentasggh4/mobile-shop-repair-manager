@@ -43,9 +43,11 @@ googleid = "1.1.1"
 playServicesAuth = "21.3.0"
 workRuntimeKtx = "2.12.0"
 pdfboxAndroid = "2.0.27.0"
+playServicesCodeScanner = "16.1.0"
 
 
 [libraries]
+play-services-code-scanner = { group = "com.google.android.gms", name = "play-services-code-scanner", version.ref = "playServicesCodeScanner" }
 pdfbox-android = { group = "com.tom-roush", name = "pdfbox-android", version.ref = "pdfboxAndroid" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }

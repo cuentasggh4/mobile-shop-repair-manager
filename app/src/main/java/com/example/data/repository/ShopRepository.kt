@@ -172,7 +172,9 @@ class ShopRepository(
         checklist: IntakeChecklist,
         estimatedCost: Double,
         advancePaid: Double,
-        technicianNotes: String = ""
+        technicianNotes: String = "",
+        damageMarks: String = "",
+        signatureData: String = ""
     ): Long = withContext(Dispatchers.IO) {
         var profile = shopProfileDao.getShopProfileSync()
         if (profile == null) {
@@ -212,6 +214,8 @@ class ShopRepository(
             estimatedCost = estimatedCost,
             advancePaid = advancePaid,
             technicianNotes = technicianNotes.trim(),
+            damageMarks = damageMarks,
+            signatureData = signatureData,
             statusLogsJson = Converters.serializeStatusLogs(
                 listOf(
                     com.example.data.model.StatusLogEntry(

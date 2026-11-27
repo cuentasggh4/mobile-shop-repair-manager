@@ -12,7 +12,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.height
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -297,12 +300,35 @@ fun ReceiptPreviewScreen(
 
                             Spacer(modifier = Modifier.height(14.dp))
 
+                            // Damage diagram recorded at reception
+                            val receiptMarks = com.example.util.DamageMarks.parse(job.damageMarks)
+                            if (receiptMarks.isNotEmpty()) {
+                                Text(
+                                    text = stringResource(R.string.rc_damage_title),
+                                    style = MaterialTheme.typography.labelLarge,
+                                    color = Color.Black
+                                )
+                                com.example.ui.components.DamageDiagram(marks = receiptMarks, height = 170.dp)
+                                Spacer(modifier = Modifier.height(10.dp))
+                            }
+                            val signatureBitmap = remember(job.signatureData) {
+                                com.example.util.SignatureCodec.decode(job.signatureData)
+                            }
+
                             // Signatures
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
                                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                    if (signatureBitmap != null) {
+                                        Image(
+                                            bitmap = signatureBitmap.asImageBitmap(),
+                                            contentDescription = null,
+                                            contentScale = ContentScale.Fit,
+                                            modifier = Modifier.width(110.dp).height(44.dp)
+                                        )
+                                    }
                                     Box(modifier = Modifier.width(110.dp).height(1.dp).background(Color.Black))
                                     Spacer(modifier = Modifier.height(4.dp))
                                     Text(stringResource(R.string.rc_customer_signature), style = MaterialTheme.typography.bodyMedium, color = Color.Black)

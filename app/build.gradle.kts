@@ -12,8 +12,8 @@ android {
     applicationId = "com.aistudio.mobilerepair.kzptqr"
     minSdk = 24
     targetSdk = 36
-    versionCode = 8
-    versionName = "1.7"
+    versionCode = 9
+    versionName = "1.8"
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
@@ -111,6 +111,7 @@ dependencies {
   implementation(libs.play.services.auth)
   implementation(libs.androidx.work.runtime.ktx)
   implementation(libs.pdfbox.android)
+  implementation(libs.play.services.code.scanner)
   // implementation(libs.play.services.location)
   implementation(libs.retrofit)
   testImplementation(libs.androidx.compose.ui.test.junit4)
