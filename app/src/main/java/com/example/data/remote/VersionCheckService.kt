@@ -43,77 +43,11 @@ object VersionCheckService {
             ?: return@withContext AppUpdateResult.InvalidRepo
         val (owner, repo) = parsed
         val canonicalSlug = "$owner/$repo"
-        val currentClean = AppUpdateChecker.cleanVersionName(currentVersionName)
-        val candidateUrls = listOf(
-            "https://raw.githubusercontent.com/$owner/$repo/main/version.json",
-            "https://raw.githubusercontent.com/$owner/$repo/master/version.json"
+        // Siempre se consulta la última Release publicada por Actions (tag = versionName).
+        // El antiguo version.json del repo quedó desactualizado (decía 1.0) y no se usa.
+        return@withContext AppUpdateChecker.checkLatestRelease(
+            repoSlug = canonicalSlug,
+            currentVersion = currentVersionName
         )
-
-        var manifest: RemoteVersionManifest? = null
-        var lastHttpError: HttpException? = null
-
-        for (url in candidateUrls) {
-            try {
-                manifest = rawApi.getRemoteVersionManifest(url)
-                break
-            } catch (e: HttpException) {
-                lastHttpError = e
-                if (e.code() != 404) {
-                    return@withContext when (e.code()) {
-                        403 -> AppUpdateResult.Error("GitHub rate limit reached. Try again later.")
-                        else -> AppUpdateResult.Error("GitHub HTTP ${e.code()}: ${e.message()}")
-                    }
-                }
-            } catch (e: Exception) {
-                return@withContext AppUpdateResult.Error(
-                    e.message ?: "Network error while checking version.json"
-                )
-            }
-        }
-
-        if (manifest == null) {
-            // Fallback to GitHub Releases API if version.json is not yet published in the repo
-            if (lastHttpError?.code() == 404) {
-                return@withContext AppUpdateChecker.checkLatestRelease(
-                    repoSlug = canonicalSlug,
-                    currentVersion = currentVersionName
-                )
-            }
-            return@withContext AppUpdateResult.NoReleasesFound(canonicalSlug)
-        }
-
-        val remoteVersionName = AppUpdateChecker.cleanVersionName(manifest.versionName)
-            .ifBlank { manifest.versionCode.toString() }
-        val releasePageUrl = manifest.releasePageUrl
-            ?.takeIf { it.isNotBlank() }
-            ?: "https://github.com/$canonicalSlug/releases/latest"
-        val apkDownloadUrl = manifest.apkDownloadUrl
-            ?.takeIf { it.isNotBlank() }
-            ?: releasePageUrl
-
-        val isNewer = if (manifest.versionCode > 0) {
-            isNewerVersionCode(manifest.versionCode, currentVersionCode)
-        } else {
-            AppUpdateChecker.isRemoteVersionNewer(remoteVersionName, currentVersionName)
-        }
-
-        if (isNewer) {
-            AppUpdateResult.UpdateAvailable(
-                currentVersion = currentClean,
-                latestVersion = remoteVersionName,
-                releaseTitle = manifest.releaseTitle?.takeIf { it.isNotBlank() }
-                    ?: "v$remoteVersionName",
-                releaseNotes = manifest.releaseNotes?.trim().orEmpty(),
-                releasePageUrl = releasePageUrl,
-                apkDownloadUrl = apkDownloadUrl,
-                publishedAt = manifest.publishedAt
-            )
-        } else {
-            AppUpdateResult.UpToDate(
-                currentVersion = currentClean,
-                latestVersion = remoteVersionName,
-                releasePageUrl = releasePageUrl
-            )
-        }
     }
 }
